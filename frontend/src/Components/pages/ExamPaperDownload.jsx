@@ -5,9 +5,15 @@ import jsPDF from "jspdf";
 function ExamPaperDownload() {
     const generatedContent = useSelector((s) => s.pdf.generatedContent);
     const backgroundImage = useSelector((s) => s.pdf.backgroundImage);
+
+    console.log("backgroundImage type:", typeof backgroundImage);
+    console.log("backgroundImage exists:", !!backgroundImage);
+    if (backgroundImage) {
+        console.log("backgroundImage first 50 chars:", backgroundImage.substring(0, 50));
+    }
+
     const [isDownloading, setIsDownloading] = useState(false);
 
-    // Extract data from Redux
     const examData = generatedContent?.exam_header ||
         generatedContent?.questions?.exam_header || {};
 
@@ -18,28 +24,42 @@ function ExamPaperDownload() {
     const answerKey = generatedContent?.answer_key ||
         generatedContent?.questions?.answer_key || [];
 
-    // ==================== PDF GENERATION HELPERS ====================
+    /**
+     * Add watermark/background image with proper opacity
+     * Using setProperties with opacity instead of setGlobalAlpha
+     */
+    function addWatermarkToPage(doc) {
+        if (!backgroundImage) {
+            console.warn("No background image available");
+            return;
+        }
 
-    
-     // Add watermark/background image to PDF page
-     
-    function addWatermark(doc, imageData, opacity = 0.08) {
         try {
             const pageWidth = doc.internal.pageSize.getWidth();
             const pageHeight = doc.internal.pageSize.getHeight();
 
-            doc.setGlobalAlpha(opacity);
+            // Set opacity using GState (proper jsPDF way)
+            // This creates a graphics state with reduced opacity
+            const gstate = new doc.GState({ opacity: 0.2 });
+            doc.setGState(gstate);
+
+            // Add image centered on page
             doc.addImage(
-                imageData,
+                backgroundImage,
                 "PNG",
-                pageWidth / 6,      // x position (slightly left of center)
+                pageWidth / 6,      // x position
                 pageHeight / 4,     // y position
                 pageWidth * 0.67,   // width (67% of page width)
                 pageHeight * 0.6    // height (60% of page height)
             );
-            doc.setGlobalAlpha(1); // Reset opacity
+
+            // Reset to full opacity for text
+            const gstate_text = new doc.GState({ opacity: 1 });
+            doc.setGState(gstate_text);
+
+            console.log("✅ Watermark added successfully");
         } catch (error) {
-            console.warn("Could not add watermark:", error);
+            console.error("❌ Error adding watermark:", error);
         }
     }
 
@@ -51,7 +71,7 @@ function ExamPaperDownload() {
         let y = 15;
 
         // Institute Name (largest, centered)
-        doc.setFontSize(18);
+        doc.setFontSize(20);
         doc.setFont(undefined, "bold");
         doc.setTextColor(20, 20, 60);
 
@@ -61,18 +81,18 @@ function ExamPaperDownload() {
             y += 8;
         }
 
-        // Subject (large, centered, blue color)
+        // Subject (large, centered)
         doc.setFontSize(14);
-        doc.setFont(undefined, "bold");
-        doc.setTextColor(50, 100, 200);
+        doc.setFont(undefined, "normal");
+        doc.setTextColor(60, 60, 60);
 
         if (examData.subject) {
             const subject = String(examData.subject);
-            doc.text(subject, pageWidth / 2, y, { align: "center" });
+            doc.text(subject, pageWidth / 2, y, { align: "left" });
             y += 8;
         }
 
-        // Course/Standard (medium, centered)
+        // Course/Standard
         doc.setFontSize(10);
         doc.setFont(undefined, "normal");
         doc.setTextColor(60, 60, 60);
@@ -81,11 +101,11 @@ function ExamPaperDownload() {
             `Course: ${examData.course_standard}` : "";
 
         if (courseStandard) {
-            doc.text(courseStandard, pageWidth / 2, y, { align: "center" });
+            doc.text(courseStandard, pageWidth / 2, y, { align: "left" });
             y += 5;
         }
 
-        // Exam Details (small, centered)
+        // Exam Details
         doc.setFontSize(9);
         doc.setTextColor(80, 80, 80);
 
@@ -96,23 +116,20 @@ function ExamPaperDownload() {
         if (examData.total_marks) {
             detailsArray.push(`Total Marks: ${examData.total_marks}`);
         }
-        if (examData.difficulty) {
-            detailsArray.push(`Level: ${examData.difficulty}`);
-        }
 
         const detailsText = detailsArray.join(" | ");
         if (detailsText) {
-            doc.text(detailsText, pageWidth / 2, y, { align: "center" });
+            doc.text(detailsText, pageWidth / 2, y, { align: "right" });
             y += 6;
         }
 
         // Horizontal line separator
         y += 2;
-        doc.setDrawColor(50, 100, 200); // Blue line
+        doc.setDrawColor(20, 20, 60);
         doc.setLineWidth(0.5);
         doc.line(15, y, pageWidth - 15, y);
 
-        return y + 8; // Return Y position after header
+        return y + 8;
     }
 
     /**
@@ -136,9 +153,11 @@ function ExamPaperDownload() {
             let y = margin;
             let pageNum = 1;
 
-            // ========== Page 1: Add Header and Watermark ==========
+            // ========== Page 1: Add Watermark FIRST, then Header ==========
             if (backgroundImage) {
-                addWatermark(doc, backgroundImage, 0.08);
+                addWatermarkToPage(doc);
+            } else {
+                console.warn("No background image to add");
             }
 
             y = addHeader(doc, examData);
@@ -154,11 +173,13 @@ function ExamPaperDownload() {
                 doc.setTextColor(0, 0, 0);
 
                 questionsList.forEach((q, index) => {
-                    // Check if need new page (leave space for footer)
+                    // Check if need new page
                     if (y > pageHeight - 30) {
                         doc.addPage();
+
+                        // Add watermark to new page
                         if (backgroundImage) {
-                            addWatermark(doc, backgroundImage, 0.08);
+                            addWatermarkToPage(doc);
                         }
 
                         // Add small header on new pages
@@ -217,7 +238,7 @@ function ExamPaperDownload() {
                             if (y > pageHeight - 20) {
                                 doc.addPage();
                                 if (backgroundImage) {
-                                    addWatermark(doc, backgroundImage, 0.08);
+                                    addWatermarkToPage(doc);
                                 }
                                 y = margin + 10;
                                 pageNum++;
@@ -233,7 +254,6 @@ function ExamPaperDownload() {
 
                         y += 3;
                     } else {
-                        // For short/long answer questions, add space for writing
                         y += 15;
                     }
 
@@ -245,7 +265,7 @@ function ExamPaperDownload() {
                         doc.text(`[${q.marks} marks]`, pageWidth - margin - 25, y - 3);
                     }
 
-                    y += 4; // Space between questions
+                    y += 4;
                 });
             }
 
@@ -266,9 +286,9 @@ function ExamPaperDownload() {
             const fileName = `${examData.subject || "exam"}-questions.pdf`;
             doc.save(fileName);
 
-            alert("✅ Exam paper downloaded successfully!");
+            console.log("✅ Exam paper PDF generated successfully");
         } catch (error) {
-            console.error("Error generating exam paper:", error);
+            console.error("❌ Error generating exam paper:", error);
             alert("❌ Failed to download exam paper. Check console for details.");
         } finally {
             setIsDownloading(false);
@@ -295,18 +315,9 @@ function ExamPaperDownload() {
 
             let y = 15;
 
-            // ========== Header ==========
+            // ========== Header with Watermark ==========
             if (backgroundImage) {
-                doc.setGlobalAlpha(0.08);
-                doc.addImage(
-                    backgroundImage,
-                    "PNG",
-                    pageWidth / 6,
-                    pageHeight / 4,
-                    pageWidth * 0.67,
-                    pageHeight * 0.6
-                );
-                doc.setGlobalAlpha(1);
+                addWatermarkToPage(doc);
             }
 
             // Title
@@ -353,16 +364,7 @@ function ExamPaperDownload() {
                     if (y > pageHeight - 25) {
                         doc.addPage();
                         if (backgroundImage) {
-                            doc.setGlobalAlpha(0.08);
-                            doc.addImage(
-                                backgroundImage,
-                                "PNG",
-                                pageWidth / 6,
-                                pageHeight / 4,
-                                pageWidth * 0.67,
-                                pageHeight * 0.6
-                            );
-                            doc.setGlobalAlpha(1);
+                            addWatermarkToPage(doc);
                         }
                         y = margin;
                     }
@@ -396,7 +398,7 @@ function ExamPaperDownload() {
                         y += 2;
                     }
 
-                    y += 2; // Space between answers
+                    y += 2;
                 });
             }
 
@@ -422,9 +424,10 @@ function ExamPaperDownload() {
             const fileName = `${examData.subject || "exam"}-answer-key.pdf`;
             doc.save(fileName);
 
+            console.log("✅ Answer sheet PDF generated successfully");
             alert("✅ Answer sheet downloaded successfully!");
         } catch (error) {
-            console.error("Error generating answer sheet:", error);
+            console.error("❌ Error generating answer sheet:", error);
             alert("❌ Failed to download answer sheet. Check console for details.");
         } finally {
             setIsDownloading(false);
@@ -506,8 +509,8 @@ function ExamPaperDownload() {
                     onClick={generateExamPaperPDF}
                     disabled={isDownloading}
                     className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all duration-200 flex items-center justify-center gap-2 ${isDownloading
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         }`}
                 >
                     {isDownloading ? (
@@ -531,8 +534,8 @@ function ExamPaperDownload() {
                     onClick={generateAnswerSheetPDF}
                     disabled={isDownloading || answerKey.length === 0}
                     className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all duration-200 flex items-center justify-center gap-2 ${isDownloading || answerKey.length === 0
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         }`}
                 >
                     {isDownloading ? (
@@ -555,20 +558,6 @@ function ExamPaperDownload() {
                         </>
                     )}
                 </button>
-            </div>
-
-            {/* Features Info */}
-            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg text-sm">
-                <p className="font-semibold text-blue-900 mb-2">✨ Features Included:</p>
-                <ul className="text-blue-800 space-y-1 text-xs">
-                    <li>✓ Professional centered header</li>
-                    <li>✓ Transparent watermark background</li>
-                    <li>✓ Horizontal separator line</li>
-                    <li>✓ Question types and marks clearly marked</li>
-                    <li>✓ Separate answer sheet download</li>
-                    <li>✓ Page numbers and footer</li>
-                    <li>✓ Print-ready format</li>
-                </ul>
             </div>
         </div>
     );

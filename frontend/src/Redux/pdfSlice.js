@@ -26,6 +26,10 @@ const pdfslice = createSlice({
   },
 });
 
-export const { setUsableExtractedText, setGeneratedContent,setBackgroundImage, setLoading } =
-  pdfslice.actions;
+export const {
+  setUsableExtractedText,
+  setGeneratedContent,
+  setBackgroundImage,
+  setLoading,
+} = pdfslice.actions;
 export default pdfslice.reducer;

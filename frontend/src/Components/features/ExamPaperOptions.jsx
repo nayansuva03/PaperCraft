@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { generateContent } from "../../services/generateContent";
-import { setGeneratedContent, setLoading } from "../../Redux/pdfSlice";
+import { setGeneratedContent, setLoading, setBackgroundImage } from "../../Redux/pdfSlice";
 import Loading from "../pages/Loading";
 
 function ExamPaperOptions() {
@@ -142,7 +142,6 @@ Create an exam paper with the following configuration:
 - Subject: ${formData.subject}
 - Time Duration: ${formData.timeDuration}
 - Total Marks: ${formData.totalMarks}
-- Difficulty: ${formData.difficulty}
 
 Generate questions based on this text:
 ${Text}
@@ -194,6 +193,7 @@ Important Rules:
         try {
           backgroundImageBase64 = await fileToBase64(formData.bgImage);
           console.log("Background image converted to Base64");
+          dispatch(setBackgroundImage(backgroundImageBase64));
         } catch (error) {
           console.warn("Could not convert background image:", error);
         }
@@ -205,7 +205,6 @@ Important Rules:
       // Add background image to the result
       dispatch(setGeneratedContent({
         questions: result,
-        backgroundImage: backgroundImageBase64
       }));
 
       navigate("/examPaperDownload");

@@ -43,7 +43,7 @@ function Navbar({ isLoggedIn, onLogin, onLogout }) {
             ) : (
               <>
                 <h1>
-                    <span className="font-extrabold text-xl tracking-tight text-indigo-600">Hi,</span>
+                    <span className="font-extrabold text-xl tracking-tight text-indigo-600">Hi, </span>
                     <span className="font-extrabold text-slate-800 text-xl tracking-tight">{username}</span>
                 </h1>
                 <button
