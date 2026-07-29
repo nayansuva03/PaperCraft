@@ -1,123 +1,140 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch ,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
-
+import { Menu, X, Sun, Moon, User, LogOut } from "lucide-react";
 
 function Navbar() {
-
-  // helper function for tailwind css
-  const getLinkClass = ({ isActive }) =>
-    `font-semibold text-sm px-1 py-2 transition-all border-b-2 ${isActive
-      ? "text-indigo-600 border-indigo-600"
-      : "text-slate-500 border-transparent hover:text-slate-800"
-    }`;
-
   const [menuOpen, setMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const username = useSelector((state) => state.user.username);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  function handleOnLogin() {
-    navigate("/LogIn");
-  }
-  function handleOnSingin() {
-    navigate("/signIn");
-  }
-  function handleOnLogout() {
-    navigate("/");
-  }
+  const handleToggleTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
 
+  // Helper function for navlink active state styling
+  const getLinkClass = ({ isActive }) =>
+    `relative px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg ${isActive
+      ? "text-indigo-600 bg-indigo-50/80 font-semibold"
+      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+    }`;
+
+  const handleOnLogin = () => navigate("/LogIn");
+  const handleOnSignin = () => navigate("/signIn");
+  const handleOnLogout = () => navigate("/");
 
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm w-full">
+    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Top Navbar */}
+        {/* Top Navbar Bar */}
         <div className="flex justify-between h-16 items-center">
 
-          {/* Logo */}
+          {/* Brand Logo */}
           <NavLink
             to="/"
-            className="flex-shrink-0 flex items-center gap-2 cursor-pointer"
+            className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-slate-900 hover:opacity-90 transition-opacity"
           >
             <span className="font-extrabold text-slate-800 text-xl tracking-tight">
               Paper<span className="text-indigo-600">Craft📦</span>
             </span>
           </NavLink>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8 h-full items-center">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center space-x-1">
             <NavLink to="/" className={getLinkClass}>
               Home
             </NavLink>
-
             <NavLink to="/SavedServices" className={getLinkClass}>
               Saved Services
             </NavLink>
-
             <NavLink to="/About" className={getLinkClass}>
               About Us
             </NavLink>
           </div>
 
-          {/* Desktop Right Side */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Desktop Right Side Controls */}
+          <div className="hidden md:flex items-center space-x-3">
+            {/* Dark Mode Icon Toggle */}
+            <button
+              onClick={handleToggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200"
+            >
+              {darkMode ? (
+                <Sun className="w-5 h-5 text-amber-500" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-600" />
+              )}
+            </button>
+
+            <div className="h-5 w-[1px] bg-slate-200 my-auto" />
+
             {!isLoggedIn ? (
-              <>
+              <div className="flex items-center space-x-2">
                 <button
                   onClick={handleOnLogin}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all duration-200"
                 >
                   Log In
                 </button>
                 <button
-                  onClick={handleOnSingin}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+                  onClick={handleOnSignin}
+                  className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-xl shadow-sm transition-all duration-200"
                 >
-                  Sign In
+                  Sign Up
                 </button>
-              </>
-              
+              </div>
             ) : (
-              <>
-                <h1>
-                  <span className="font-extrabold text-xl tracking-tight text-indigo-600">
-                    Hi,
-                  </span>{" "}
-                  <span className="font-extrabold text-slate-800 text-xl tracking-tight">
+              <div className="flex items-center space-x-3">
+                {/* User Profile Pill */}
+                <div className="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200/60">
+                  <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                    {username ? username.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
+                  </div>
+                  <span className="text-sm font-semibold text-slate-800 max-w-[120px] truncate">
                     {username}
                   </span>
-                </h1>
+                </div>
 
                 <button
-                    onClick={handleOnLogout}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+                  onClick={handleOnLogout}
+                  aria-label="Log out"
+                  className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-200"
+                  title="Log out"
                 >
-                  Log out
+                  <LogOut className="w-5 h-5" />
                 </button>
-              </>
+              </div>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? (
-                <X className="w-7 h-7 text-slate-800" />
-              ) : (
-                <Menu className="w-7 h-7 text-slate-800" />
-              )}
+          {/* Mobile Menu Toggle Button */}
+          <div className="flex items-center md:hidden space-x-2">
+            <button
+              onClick={handleToggleTheme}
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+            >
+              {darkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 focus:outline-none"
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Dropdown */}
         {menuOpen && (
-          <div className="md:hidden border-t border-slate-200 py-4">
-            <div className="flex flex-col gap-4">
-
+          <div className="md:hidden py-4 border-t border-slate-100 animate-in slide-in-from-top duration-200">
+            <div className="flex flex-col space-y-1">
               <NavLink
                 to="/"
                 onClick={() => setMenuOpen(false)}
@@ -142,47 +159,52 @@ function Navbar() {
                 About Us
               </NavLink>
 
-              <hr />
-
-              {!isLoggedIn ? (
-                <>
-                  <button
-                    onClick={() => {
-                      handleOnLogin();
-                      setMenuOpen(false);
-                    }}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-semibold"
-                  >
-                    Log In
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleOnSingin();
-                      setMenuOpen(false);
-                    }}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-xl font-semibold"
-                  >
-                    Sing In
-                  </button>
-                </>
-                
-              ) : (
-                <>
-                  <div className="font-bold text-slate-800">
-                    Hi, <span className="text-indigo-600">{username}</span>
+              <div className="pt-4 border-t border-slate-100 mt-2">
+                {!isLoggedIn ? (
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => {
+                        handleOnLogin();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full py-2.5 rounded-xl font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                    >
+                      Log In
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleOnSignin();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full py-2.5 rounded-xl font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm"
+                    >
+                      Sign Up
+                    </button>
                   </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3 px-2 py-1">
+                      <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+                        {username ? username.charAt(0).toUpperCase() : "U"}
+                      </div>
+                      <span className="font-semibold text-slate-800">
+                        {username}
+                      </span>
+                    </div>
 
-                  <button
-                    onClick={() => {
-                      handleOnLogout();
-                      setMenuOpen(false);
-                    }}
-                    className="bg-slate-100 hover:bg-slate-200 py-2 rounded-xl font-semibold text-slate-700"
-                  >
-                    Log out
-                  </button>
-                </>
-              )}
+                    <button
+                      onClick={() => {
+                        handleOnLogout();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Log out
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
