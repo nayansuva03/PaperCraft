@@ -1,15 +1,15 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { generateContent } from '../../services/generateContent.js'
-import { setGeneratedContent, setLoading } from "../../Redux/pdfSlice";
-import Loading from "../pages/Loading";
+import { setGeneratedContent, setLoading } from "../../Redux/download_Pdf_Slice";
+import Loading from "../common/Loading";
+import { generateContent } from "../../Services/generateContent"
 
 function MaxQuestOption() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const Text = useSelector((state) => state.pdf.UsableExtractedText);
-  const isLoading = useSelector((state) => state.pdf.isLoading);
+  const file = useSelector((state) => state.Uploaded_pdf.file);
+  const isLoading = useSelector((state) => state.Downloaded_pdf.isLoading);
   const options = [
     {
       id: "mcq",
@@ -38,60 +38,91 @@ function MaxQuestOption() {
   ];
 
   async function handleSelect(questionType) {
+    const prompt = `
+      Generate Maximum ${questionType}. and only give it in a valid json formate.
+
+      **Example if MCQs:
+    {
+    "questions": [
+        {
+          "id": "q1",
+          "question": "Which word is a noun?",
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "answer": "C) School"
+        },
+        {
+          "id": "q2",
+          "question": "Which word is a noun?",
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "answer": "C) School"
+        },    
+    }
+        **Example if True or False:
+    {
+        "questions":[
+    {
+    "id": "q1",
+    "question": "A proper noun always begins with a capital letter.",
+    "answer": "True"    
+    },
+    {
+    "id": "q2",
+    "question": "The word 'quickly' is an adjective.",
+    "answer": "False"    
+    }
+        ]
+    }
+
+    **Example if one liner questions:
+    {
+        "questions":[
+    {
+    "id": "q1",
+    "question": "What is a noun? Define in one sentence.",
+    "answer": "A noun is the name of a person, place, animal, or thing."    
+    },
+    {
+    "id": "q2",
+    "question": "Give one example of a preposition.",
+    "answer": "Under (or on, in, at, beside)."    
+    }
+        ]
+    }
+
+    **Example if long questions:
+    {
+        "questions":[
+    {
+    "id": "q1",
+    "question": "Write a short paragraph (5-6 sentences) describing your favorite hobby.",
+    "answer": "answer"    
+    },
+    {
+    "id": "q2",
+    "question": "Read the story snippet and answer: 'Once a lion was sleeping under a tree. A little mouse started playing on him...' Why did the lion wake up and what did he decide to do with the mouse?",
+    "answer": "answer"    
+    }
+        ]
+    }
+
+    **If you cannot satisfy all requirements because the supplied text is insufficient, return
+
+{
+    "success": false,
+    "reason": "Not enough information in the provided text."
+}
+
+instead of generating incorrect questions.
+      `;
+
+
     try {
       dispatch(setLoading(true));
-      const prompt = `
-Create maximum ${questionType} questions from the text below.
-
-if it's mcq then,
-Return ONLY a JSON array, no extra text, no markdown, no backticks, just raw JSON like this:
-[
-  {
-    "question": "What is ...?",
-    "options": ["A) ...", "B) ...", "C) ...", "D) ..."],
-    "answer": "A"
-  }
-]
-
-if it's true/false then,
-Return ONLY a JSON array, no extra text, no markdown, no backticks, just raw JSON like this:
-[
-  {
-    "question": "What is ...?",
-    "options": ["True", "False"],
-    "answer": "True"
-  }
-]
-
-if it's one liner question then,
-Return ONLY a JSON array, no extra text, no markdown, no backticks, just raw JSON like this:
-[
-  {
-    "question": "What is ...?",
-    "answer": "It is ..."
-  }
-]
-
-if it's long question then,
-Return ONLY a JSON array, no extra text, no markdown, no backticks, just raw JSON like this:
-[
-  {
-    "question": "What is ...?",
-    "answer": "It is ..."
-  }
-]
-
-Text:
-${Text}
-`;
       console.log(prompt);
-      //-------------------------------------------------------------
-      const result = await generateContent(prompt);
-      console.log('from maxQuestOptions.jsx' + JSON.stringify(result));
-
-      dispatch(setGeneratedContent({ questions: result }));
+      const result = await generateContent(prompt, file);
+      dispatch(setGeneratedContent(result));
       dispatch(setLoading(false));
-      navigate("/download");
+      navigate("/MaxQuestDownload");
     } catch (err) {
       dispatch(setLoading(false));
       console.error(err);

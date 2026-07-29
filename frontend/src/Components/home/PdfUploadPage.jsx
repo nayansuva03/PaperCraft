@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { set_upload_Pdf } from "../../Redux/upload_pdf_Slice";
 
-function PdfUploadPage({ FinalFiles }) {
+function PdfUploadPage() {
   const [file, setfile] = useState([]);
+  const dispatch = useDispatch();
 
-  function handelFileChange(e) {
+  function handleFileChange(e) {
     const selectedFiles = Array.from(e.target.files);
     setfile(selectedFiles);
   }
 
-  function handelFileSelect() {
+  function handelFileSelect(e) {
     if (file.length === 0) {
-      alert("please select a PDF");
+      e.preventDefault(); // Stop NavLink navigation
+      alert("Please select a PDF");
       return;
     }
 
@@ -22,8 +26,8 @@ function PdfUploadPage({ FinalFiles }) {
       alert("All uploaded files must be valid PDF documents.");
       return;
     }
-
-    FinalFiles(file);
+    //aaya redux no code aavse..................................................................
+    dispatch(set_upload_Pdf(file));
   }
 
   return (
@@ -38,7 +42,7 @@ function PdfUploadPage({ FinalFiles }) {
         <p className="text-slate-700 font-medium mb-1">Select a PDF file</p>
 
         <input
-          onChange={handelFileChange}
+          onChange={handleFileChange}
           type="file"
           accept=".pdf"
           multiple
@@ -54,7 +58,6 @@ function PdfUploadPage({ FinalFiles }) {
 
         to="Homeoptions"
         onClick={handelFileSelect}
-        disabled={file.length === 0}
         className={`w-full py-3.5 px-4 rounded-xl font-bold text-white transition-all duration-200 
           ${file.length > 0
             ? "bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"

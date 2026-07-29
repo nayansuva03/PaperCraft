@@ -1,24 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  UsableExtractedText: "",
   generatedContent: { questions: [] },
   backgroundImage: null,
+  instituteLogo: null,
   isLoading: false,
 };
 
-const pdfslice = createSlice({
+const download_Pdf_Slice = createSlice({
   name: "pdf",
   initialState,
   reducers: {
-    setUsableExtractedText: (state, action) => {
-      state.UsableExtractedText = action.payload;
-    },
     setGeneratedContent: (state, action) => {
       state.generatedContent = action.payload;
     },
     setBackgroundImage: (state, action) => {
       state.backgroundImage = action.payload;
+    },
+    setInstituteLogo: (state, action) => {
+      state.instituteLogo = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -27,9 +27,9 @@ const pdfslice = createSlice({
 });
 
 export const {
-  setUsableExtractedText,
   setGeneratedContent,
   setBackgroundImage,
+  setInstituteLogo,
   setLoading,
-} = pdfslice.actions;
-export default pdfslice.reducer;
+} = download_Pdf_Slice.actions;
+export default download_Pdf_Slice.reducer;

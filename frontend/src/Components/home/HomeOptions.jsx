@@ -4,12 +4,6 @@ import { useSelector } from "react-redux";
 
 function HomeOptions() {
 
-  const extractedText = useSelector(
-        (state) => state.pdf.UsableExtractedText
-    );
-
-    console.log(extractedText);
-
   return (
     <div className="w-full max-w-5xl px-4 py-8 mx-auto">
       <div className="text-center mb-12">
@@ -24,7 +18,7 @@ function HomeOptions() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center pt-4">
 
         {/* Card 1: Online Quiz */}
-        <NavLink to="/HomeOptions/onlinequiz">
+        <NavLink to="/HomeOptions/OnlineQuizOptions">
           <div
             className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 hover:border-indigo-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-72 justify-between group"
           >
@@ -43,7 +37,7 @@ function HomeOptions() {
 
 
         {/* Card 2: Generate Maximum Questions (Elevated & Larger) */}
-        <NavLink to="/HomeOptions/maxquest">
+        <NavLink to="/HomeOptions/MaxQuestOption">
           <div
             className="bg-white p-8 rounded-3xl shadow-2xl border-2 border-indigo-500 md:-translate-y-4 md:scale-105 transition-all duration-300 cursor-pointer flex flex-col h-80 justify-between relative overflow-hidden group"
           >
@@ -65,7 +59,7 @@ function HomeOptions() {
 
 
         {/* Card 3: Make Exam Papers */}
-        <NavLink to="/HomeOptions/exampaper">
+        <NavLink to="/HomeOptions/ExamPaperOptions">
           <div
             className="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 hover:border-indigo-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-72 justify-between group"
           >

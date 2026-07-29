@@ -14,7 +14,7 @@ function About() {
 
   return (
     <div className="bg-white rounded-3xl shadow-xl border border-slate-100 w-full max-w-4xl p-6 sm:p-10 my-6 animate-in fade-in duration-300">
-      
+
       {/* Header Banner */}
       <div className="border-b border-slate-100 pb-6 mb-8 text-center sm:text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 rounded-full text-indigo-600 text-xs font-semibold mb-3">

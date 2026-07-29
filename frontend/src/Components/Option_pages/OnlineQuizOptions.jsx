@@ -2,16 +2,16 @@ import React from "react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { generateContent } from "../../services/generateContent";
-import { setGeneratedContent, setLoading } from "../../Redux/pdfSlice";
-import Loading from "../pages/Loading";
+import { setGeneratedContent, setLoading } from "../../Redux/download_Pdf_Slice";
+import Loading from "../common/Loading";
+import { generateContent } from "../../Services/generateContent"
+
 
 function OnlineQuizOptions() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const Text = useSelector((state) => state.pdf.UsableExtractedText);
-  const isLoading = useSelector((state) => state.pdf.isLoading);
-
+  const isLoading = useSelector((state) => state.Downloaded_pdf.isLoading);
+  const file = useSelector((state) => state.Uploaded_pdf.file);
   const [quizType, setQuizType] = useState("mcq"); // Default selection
   const [numQuestions, setNumQuestions] = useState(10);
 
@@ -39,33 +39,50 @@ function OnlineQuizOptions() {
   }
 
   async function handleFinalFunction() {
+    const prompt = `
+      Create ${numQuestions} ${quizType === 'mcq' ? "MCQ Questions." : "True or False Questions."} based on the info i have given you.
+      Give only a valid json array of objects simmilar to given example and don't include/cover json with ${"```"}. 
+
+      **Example if MCQs:
+    {
+    "questions": [
+        {
+          "id": "q1",
+          "question": "Which word is a noun?",
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "answer": "C) School"
+        },
+        {
+          "id": "q2",
+          "question": "Which word is a noun?",
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "answer": "C) School"
+        },    
+    }
+        **Example if True or False:
+    {
+        "questions":[
+    {
+    "id": "q1",
+    "question": "A proper noun always begins with a capital letter.",
+    "answer": "True"    
+    },
+    {
+    "id": "q2",
+    "question": "The word 'quickly' is an adjective.",
+    "answer": "False"    
+    }
+        ]
+    }
+
+      `;
     try {
       dispatch(setLoading(true));
-      const prompt = `Create ${numQuestions} ${quizType === 'mcq' ? 'Multiple Choice' : 'True/False'} questions based on the text below.
- 
-You MUST return ONLY a valid JSON array of objects. Do not include any markdown formatting like \`\`\`json. 
-Each object in the array must strictly adhere to the following schema:
-[
-  {
-    "question": "The question text here",
-    "options": ["Option 1", "Option 2", "Option 3", "Option 4"], 
-    "answer": "The exact text of the correct option"
-  }
-]
- 
-Note for options: If it is a True/False quiz, provide exactly two options: ["True", "False"].
- 
-Text:
-${Text}
-`;
-
-      const result = await generateContent(prompt);
-      console.log("Raw Result from Gemini:", result);
-
-      // Wrap in { questions: result } to match MaxQuestOption
-      dispatch(setGeneratedContent({ questions: result }));
+      console.log(prompt);
+      const result = await generateContent(prompt, file);
+      dispatch(setGeneratedContent(result));
       dispatch(setLoading(false));
-      navigate("/HomeOptions/onlinequiz/OnlineQuiz");
+      navigate("/onlinequiz");
     } catch (err) {
       dispatch(setLoading(false));
       console.error(err);
@@ -109,8 +126,8 @@ ${Text}
             <div
               onClick={() => setQuizType("mcq")}
               className={`p-4 rounded-xl border-2 text-center cursor-pointer transition-all ${quizType === "mcq"
-                  ? "border-indigo-600 bg-indigo-50/50 font-bold text-indigo-600"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50 font-medium"
+                ? "border-indigo-600 bg-indigo-50/50 font-bold text-indigo-600"
+                : "border-slate-200 text-slate-600 hover:bg-slate-50 font-medium"
                 }`}
             >
               <div className="text-2xl mb-1">🎯</div>
@@ -120,8 +137,8 @@ ${Text}
             <div
               onClick={() => setQuizType("true_false")}
               className={`p-4 rounded-xl border-2 text-center cursor-pointer transition-all ${quizType === "true_false"
-                  ? "border-indigo-600 bg-indigo-50/50 font-bold text-indigo-600"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50 font-medium"
+                ? "border-indigo-600 bg-indigo-50/50 font-bold text-indigo-600"
+                : "border-slate-200 text-slate-600 hover:bg-slate-50 font-medium"
                 }`}
             >
               <div className="text-2xl mb-1">⚖️</div>

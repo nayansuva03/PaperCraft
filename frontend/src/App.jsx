@@ -1,21 +1,21 @@
 import { useState } from "react";
 import Navbar from "./Components/common/Navbar";
-import Register from "./Components/pages/Register";
-import PdfUploadPage from "./PdfUploadPage";
+import PdfUploadPage from "./Components/home/PdfUploadPage";
 import About from "./Components/home/AboutPage";
-import PreviousPDFs from "./Components/home/PreviousPDFs";
+import SavedServices from "./Components/home/SavedServices";
 import HomeOptions from "./Components/home/HomeOptions";
-import MaxQuestOption from "./Components/features/MaxQuestOption";
-import OnlineQuizOptions from "./Components/features/OnlineQuizOptions";
-import ExamPaperOptions from "./Components/features/ExamPaperOptions";
-import Download from "./Components/pages/Download";
-import ExamPaperDownload from "./Components/pages/ExamPaperDownload";
-import QuizResult from "./Components/features/QuizResult";
-import OnlineQuiz from "./Components/features/OnlineQuiz";
-import { extracteFromPdf } from "./services/pdfExtractor";
+import MaxQuestOption from "./Components/Option_pages/MaxQuestOption";
+import OnlineQuizOptions from "./Components/Option_pages/OnlineQuizOptions";
+import ExamPaperOptions from "./Components/Option_pages/ExamPaperOptions";
+import MaxQuestDownload from "./Components/End_pages/MaxQuestDownload";
+import ExamPaperDownload from "./Components/End_pages/ExamPaperDownload";
+import QuizResult from "./Components/End_pages/QuizResult";
+import OnlineQuiz from "./Components/End_pages/OnlineQuiz"
+import LogIn from "./Components/common/Log_In";
+import SignIn from "./Components/common/Sign_In"
+import ForgotPassword from "./Components/common/Forgot_password";
 import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUsableExtractedText } from "./Redux/pdfSlice";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,18 +23,6 @@ function App() {
   const dispatch = useDispatch()
 
 
-  async function handelFinalFiles(listOfFiles) {
-
-    try {
-      const ArrayOfText = await Promise.all(listOfFiles.map(f => extracteFromPdf(f)));
-      const CombainedText = ArrayOfText.join('\n\n')
-      dispatch(setUsableExtractedText(CombainedText))
-      
-    } catch (error) {
-      console.error("Error generating MCQs:", error);
-      alert("An error occurred. Please try again.");
-    }
-  }
 
   return (
     <>
@@ -48,33 +36,36 @@ function App() {
         }}
       />
       <div className="flex justify-center items-center mt-10">
-<Routes>
-        <Route path="/" element={<PdfUploadPage FinalFiles={handelFinalFiles} />} />
-        <Route path="/PreviousPDFs" element={<PreviousPDFs isLoggedIn={isLoggedIn} />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Homeoptions" element={<HomeOptions />} />
-        <Route path="/HomeOptions/maxquest" element={<MaxQuestOption />} />
-        <Route path="/HomeOptions/onlinequiz" element={<OnlineQuizOptions />} />
-          <Route path="/HomeOptions/onlinequiz/OnlineQuiz" element={<OnlineQuiz />} />
-          <Route path="/HomeOptions/onlinequiz/QuizResult" element={<QuizResult />} />
-        <Route path="/HomeOptions/exampaper" element={<ExamPaperOptions />} />
-        <Route path="/download" element={<Download />} />
+        <Routes>
+          <Route path="/" element={<PdfUploadPage />} />
+          <Route path="/SavedServices" element={<SavedServices isLoggedIn={isLoggedIn} />} />
+          <Route path="/About" element={<About />} />
+          <Route path="/LogIn" element={<LogIn />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/HomeOptions" element={<HomeOptions />} />
+          <Route path="/HomeOptions/MaxQuestOption" element={<MaxQuestOption />} />
+          <Route path="/HomeOptions/OnlineQuizOptions" element={<OnlineQuizOptions />} />
+          <Route path="/HomeOptions/ExamPaperOptions" element={<ExamPaperOptions />} />
+          <Route path="/MaxQuestDownload" element={<MaxQuestDownload />} />
           <Route path="/examPaperDownload" element={<ExamPaperDownload />} />
+          <Route path="/onlinequiz" element={<OnlineQuiz />} />
+          <Route path="/QuizResult" element={<QuizResult />} />
 
-      </Routes>
+        </Routes>
 
-      {showRegister && (
-        <Register
-          onClose={() => setShowRegister(false)}
-          onLoginSuccess={() => {
-            setIsLoggedIn(true);
-            setShowRegister(false);
-          }}
-        />
-      )}
+        {showRegister && (
+          <Register
+            onClose={() => setShowRegister(false)}
+            onLoginSuccess={() => {
+              setIsLoggedIn(true);
+              setShowRegister(false);
+            }}
+          />
+        )}
       </div>
 
-      
+
 
     </>
   );

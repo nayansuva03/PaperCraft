@@ -1,10 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
-import pdfReducer from './pdfSlice'
-import userReducer from './userSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import DownloadpdfReducer from "./download_Pdf_Slice";
+import UploadpdfReducer from "./upload_pdf_Slice";
+import userReducer from "./userSlice";
+import { Upload } from "lucide-react";
 
 export const store = configureStore({
   reducer: {
-    pdf:pdfReducer,
-    user:userReducer,
+    Downloaded_pdf: DownloadpdfReducer,
+    Uploaded_pdf: UploadpdfReducer,
+    user: userReducer,
   },
-})
+});

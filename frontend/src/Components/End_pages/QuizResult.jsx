@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Feedback from "../common/Feedback";
+
 
 function QuizResult({ questions, userAnswers, onRestart }) {
     const navigate = useNavigate();
@@ -85,6 +87,7 @@ function QuizResult({ questions, userAnswers, onRestart }) {
                     Back to Dashboard
                 </button>
             </div>
+            <Feedback feedbackType="Quiz" />
         </div>
     );
 }

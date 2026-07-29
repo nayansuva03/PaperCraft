@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import QuizResult from "./QuizResult"; // We will create this next
+import QuizResult from "./QuizResult";
 
 function OnlineQuiz() {
     const navigate = useNavigate();
     // Assuming 'generatedContent' stores the raw response from Gemini
-    const rawContent = useSelector((state) => state.pdf.generatedContent);
+    const rawContent = useSelector((state) => state.Downloaded_pdf.generatedContent);
 
     const [quizData, setQuizData] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -82,7 +82,7 @@ function OnlineQuiz() {
 
     // If submitted, show the results component
     if (isSubmitted) {
-        return <QuizResult questions={quizData} userAnswers={userAnswers} onRestart={() => navigate("/OnlineQuizOptions")} />;
+        return <QuizResult questions={quizData} userAnswers={userAnswers} onRestart={() => navigate("/HomeOptions/OnlineQuizOptions")} />;
     }
 
     const currentQuestion = quizData[currentIndex];
@@ -113,8 +113,8 @@ function OnlineQuiz() {
                             key={idx}
                             onClick={() => handleOptionSelect(option)}
                             className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${isSelected
-                                    ? "border-indigo-600 bg-indigo-50 font-bold text-indigo-700"
-                                    : "border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                                ? "border-indigo-600 bg-indigo-50 font-bold text-indigo-700"
+                                : "border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
                                 }`}
                         >
                             {option}
