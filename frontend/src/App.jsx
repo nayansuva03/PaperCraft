@@ -15,30 +15,15 @@ import LogIn from "./Components/common/Log_In";
 import SignIn from "./Components/common/Sign_In"
 import ForgotPassword from "./Components/common/Forgot_password";
 import { Routes, Route } from "react-router-dom";
-import { useDispatch } from "react-redux";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const dispatch = useDispatch()
-
-
-
   return (
     <>
-      <Navbar
-        isLoggedIn={isLoggedIn}
-        onLogin={() => setShowRegister(true)}
-
-        onLogout={() => {
-          setIsLoggedIn(false);
-
-        }}
-      />
+      <Navbar />
       <div className="flex justify-center items-center mt-10">
         <Routes>
           <Route path="/" element={<PdfUploadPage />} />
-          <Route path="/SavedServices" element={<SavedServices isLoggedIn={isLoggedIn} />} />
+          <Route path="/SavedServices" element={<SavedServices />} />
           <Route path="/About" element={<About />} />
           <Route path="/LogIn" element={<LogIn />} />
           <Route path="/signIn" element={<SignIn />} />
@@ -51,22 +36,8 @@ function App() {
           <Route path="/examPaperDownload" element={<ExamPaperDownload />} />
           <Route path="/onlinequiz" element={<OnlineQuiz />} />
           <Route path="/QuizResult" element={<QuizResult />} />
-
         </Routes>
-
-        {showRegister && (
-          <Register
-            onClose={() => setShowRegister(false)}
-            onLoginSuccess={() => {
-              setIsLoggedIn(true);
-              setShowRegister(false);
-            }}
-          />
-        )}
       </div>
-
-
-
     </>
   );
 }
