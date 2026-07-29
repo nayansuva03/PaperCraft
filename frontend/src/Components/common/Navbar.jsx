@@ -1,21 +1,18 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { setTheme } from "../../Redux/themeSlice";
 import { useState } from "react";
 import { Menu, X, Sun, Moon, User, LogOut } from "lucide-react";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const theme = useSelector((state) => state.theme.theme);
   const username = useSelector((state) => state.user.username);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
-  const handleToggleTheme = () => {
-    setDarkMode((prev) => !prev);
-  };
 
   // Helper function for navlink active state styling
   const getLinkClass = ({ isActive }) =>
@@ -27,9 +24,14 @@ function Navbar() {
   const handleOnLogin = () => navigate("/LogIn");
   const handleOnSignin = () => navigate("/signIn");
   const handleOnLogout = () => navigate("/");
+  const handleToggleTheme = () => {
+    dispatch(
+      setTheme(theme === "dark" ? "light" : "dark")
+    );
+  };
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all">
+    <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Top Navbar Bar */}
@@ -66,7 +68,7 @@ function Navbar() {
               aria-label="Toggle theme"
               className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200"
             >
-              {darkMode ? (
+              {theme === "dark" ? (
                 <Sun className="w-5 h-5 text-amber-500" />
               ) : (
                 <Moon className="w-5 h-5 text-slate-600" />
@@ -120,8 +122,11 @@ function Navbar() {
               onClick={handleToggleTheme}
               className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
             >
-              {darkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5" />}
-            </button>
+              {theme === "dark" ? (
+                <Sun className="w-5 h-5 text-amber-500" />
+              ) : (
+                <Moon className="w-5 h-5 text-slate-600" />
+              )}            </button>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 focus:outline-none"

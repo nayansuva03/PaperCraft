@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import Navbar from "./Components/common/Navbar";
 import PdfUploadPage from "./Components/home/PdfUploadPage";
 import About from "./Components/home/AboutPage";
@@ -17,6 +19,15 @@ import ForgotPassword from "./Components/common/Forgot_password";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
+  const theme = useSelector((state) => state.theme.theme);
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   return (
     <>
       <Navbar />
