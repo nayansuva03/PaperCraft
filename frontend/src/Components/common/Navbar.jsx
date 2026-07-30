@@ -41,7 +41,7 @@ function Navbar() {
             className="flex items-center gap-2 text-xl font-extrabold tracking-tight hover:opacity-90 transition-opacity"
           >
             <span className="font-extrabold text-slate-800 dark:text-white text-xl tracking-tight">
-              Paper<span className="text-indigo-600 dark:text-indigo-400">Craft📦</span>
+              Paper<span className="text-indigo-600 dark:text-indigo-400">Craft</span>
             </span>
           </NavLink>
 
