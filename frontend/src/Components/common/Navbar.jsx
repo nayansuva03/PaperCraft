@@ -11,7 +11,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   const theme = useSelector((state) => state.theme.theme);
-  const username = useSelector((state) => state.user.username);
+  const name = useSelector((state) => state.user.name);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   // Helper function for navlink active state styling (with dark mode support)
@@ -95,10 +95,10 @@ function Navbar() {
                 {/* User Profile Pill */}
                 <div className="flex items-center space-x-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200/60 dark:border-slate-700/60">
                   <div className="w-6 h-6 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center text-xs font-bold">
-                    {username ? username.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
+                    {name ? name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
                   </div>
                   <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 max-w-[120px] truncate">
-                    {username}
+                    {name}
                   </span>
                 </div>
 
@@ -189,10 +189,10 @@ function Navbar() {
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3 px-2 py-1">
                       <div className="w-8 h-8 rounded-full bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center font-bold">
-                        {username ? username.charAt(0).toUpperCase() : "U"}
+                        {name ? name.charAt(0).toUpperCase() : "U"}
                       </div>
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
-                        {username}
+                        {name}
                       </span>
                     </div>
 

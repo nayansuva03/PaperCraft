@@ -1,109 +1,26 @@
 import express from "express";
-import mongoose from "mongoose";
-import User from "./mongodb/users.js";
-import Feedback from "./mongodb/feedback.js";
 import cors from "cors";
 import multer from "multer";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import feedbackRoutes from "./routes/feedbackRoutes.js";
+
+
 dotenv.config();
 
 const app = express();
 const genAi = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+connectDB();
+
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/feedback", feedbackRoutes);
+
 const upload = multer({
   storage: multer.memoryStorage(),
-});
-
-mongoose
-  .connect(process.env.MONGODB_URL)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-
-//--for mongodb
-app.post("/api/users", async (req, res) => {
-  console.log("/api/users was called.");
-  try {
-    const { username, password } = req.body;
-    const newUser = new User({ username, password });
-    const saved = await newUser.save();
-
-    res.status(200).json({ success: true, data: saved });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-app.post("/api/feedback", async (req, res) => {
-  console.log("/api/feedback was called.");
-
-  try {
-    if (!req.body.username && !req.body.guestName) {
-      return res.status(400).json({
-        success: false,
-        message: "Username or Guest Name is required.",
-      });
-    }
-
-    if (!req.body.rating) {
-      return res.status(400).json({
-        success: false,
-        message: "Rating required.",
-      });
-    }
-    const newFeedback = new Feedback(req.body);
-
-    const saved = await newFeedback.save();
-
-    res.status(201).json({
-      success: true,
-      data: saved,
-    });
-  } catch (err) {
-    console.error(err);
-
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
-});
-
-app.get("/api/feedback", async (req, res) => {
-  try {
-    const allFeedback = await Feedback.find().sort({
-      createdAt: -1,
-    });
-
-    res.status(200).json({
-      success: true,
-      data: allFeedback,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
-});
-
-app.delete("/api/feedback/:id", async (req, res) => {
-  try {
-    await Feedback.findByIdAndDelete(req.params.id);
-
-    res.json({
-      success: true,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
-  }
 });
 
 //--for gemini

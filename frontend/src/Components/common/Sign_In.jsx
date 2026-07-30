@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function SignIn() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleOnLogin = () => navigate("/LogIn");
 
     const [showOTP, setShowOTP] = useState(false);
@@ -20,15 +22,16 @@ function SignIn() {
             ...formData,
             [e.target.name]: e.target.value
         });
+
     }
 
     function handleSubmit(e) {
         e.preventDefault();
+        dispatch(setname(formData.name));
+        dispatch(setemail(formData.email));
 
-        // MongoDB / Backend request for generating OTP later
         console.log("Account Details Submitted:", formData);
 
-        // Show the OTP template
         setShowOTP(true);
     }
 

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 function Feedback({ feedbackType }) {
-    const user = useSelector((state) => state.user);
+    const name = useSelector((state) => state.user.name);
+    const email = useSelector((state) => state.user.email);
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -11,12 +12,22 @@ function Feedback({ feedbackType }) {
         if (!message.trim()) return;
 
         setIsSubmitting(true);
+        let body;
 
-        const body = {
-            username: user?.username || "Guest",
-            message,
-            feedbackType,
-        };
+        if (email) {
+             body = {
+                name: name,
+                email: email,
+                message,
+                feedbackType,
+            };
+        } else {
+             body = {
+                guestName: `Guest_${Date.now()}`,
+                message,
+                feedbackType,
+            };
+        }
 
         try {
             const response = await fetch(
