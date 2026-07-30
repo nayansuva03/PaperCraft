@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import Navbar from "./Components/common/Navbar";
 import PdfUploadPage from "./Components/home/PdfUploadPage";
 import About from "./Components/home/AboutPage";
@@ -12,26 +11,29 @@ import ExamPaperOptions from "./Components/Option_pages/ExamPaperOptions";
 import MaxQuestDownload from "./Components/End_pages/MaxQuestDownload";
 import ExamPaperDownload from "./Components/End_pages/ExamPaperDownload";
 import QuizResult from "./Components/End_pages/QuizResult";
-import OnlineQuiz from "./Components/End_pages/OnlineQuiz"
+import OnlineQuiz from "./Components/End_pages/OnlineQuiz";
 import LogIn from "./Components/common/Log_In";
-import SignIn from "./Components/common/Sign_In"
+import SignIn from "./Components/common/Sign_In";
 import ForgotPassword from "./Components/common/Forgot_password";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
   const theme = useSelector((state) => state.theme.theme);
+
   useEffect(() => {
+    const root = document.documentElement;
     if (theme === "dark") {
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      root.classList.remove("dark");
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
   return (
-    <>
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
       <Navbar />
-      <div className="flex justify-center items-center mt-10">
+      <main className="flex justify-center items-center py-10 px-4">
         <Routes>
           <Route path="/" element={<PdfUploadPage />} />
           <Route path="/SavedServices" element={<SavedServices />} />
@@ -48,8 +50,8 @@ function App() {
           <Route path="/onlinequiz" element={<OnlineQuiz />} />
           <Route path="/QuizResult" element={<QuizResult />} />
         </Routes>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
 

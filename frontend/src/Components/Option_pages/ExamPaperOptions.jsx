@@ -554,14 +554,14 @@ instead of generating incorrect questions.
 
 
   return (
-    <div className="bg-white p-8 sm:p-10 rounded-3xl shadow-xl w-full max-w-2xl border border-slate-100 animate-in fade-in duration-200">
-      <NavLink to="/HomeOptions" className="text-slate-400 hover:text-slate-600 font-semibold text-xs flex items-center gap-1 mb-6 transition-colors">
+    <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl shadow-xl w-full max-w-2xl border border-slate-100 dark:border-slate-800 transition-colors duration-300 animate-in fade-in duration-200">
+      <NavLink to="/HomeOptions" className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-semibold text-xs flex items-center gap-1 mb-6 transition-colors">
         ← Back
       </NavLink>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-extrabold text-slate-800">Exam Paper Parameters</h2>
-        <p className="text-slate-500 text-sm mt-1">Configure structural layout properties and content metrics for evaluation.</p>
+        <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">Exam Paper Parameters</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Configure structural layout properties and content metrics for evaluation.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -569,94 +569,94 @@ instead of generating incorrect questions.
         {/* Core Identity Parameters Context Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Institute Name</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Institute Name</label>
             <input
               type="text"
               name="instituteName"
               value={formData.instituteName}
               onChange={handleInputChange}
               placeholder="e.g. Stanford University or ABC High School"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Institute Logo</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Institute Logo</label>
             <input
               type="file"
               name="instituteLogo"
               accept="image/*"
               onChange={handleFileChange}
-              className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer border border-slate-200 p-1 rounded-xl"
+              className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-950/60 file:text-indigo-600 dark:file:text-indigo-400 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/60 cursor-pointer border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 rounded-xl"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Background Watermark / Image</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Background Watermark / Image</label>
             <input
               type="file"
               name="bgImage"
               accept="image/*"
               onChange={handleFileChange}
-              className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 cursor-pointer border border-slate-200 p-1 rounded-xl"
+              className="w-full text-xs text-slate-500 dark:text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-950/60 file:text-indigo-600 dark:file:text-indigo-400 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/60 cursor-pointer border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-1 rounded-xl"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Course / Standard</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Course / Standard</label>
             <input
               type="text"
               name="courseStandard"
               value={formData.courseStandard}
               onChange={handleInputChange}
               placeholder="e.g. B.Tech Semester IV or Class 12"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Subject</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Subject</label>
             <input
               type="text"
               name="subject"
               value={formData.subject}
               onChange={handleInputChange}
               placeholder="e.g. Database Management Systems"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Time Duration</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Time Duration</label>
             <input
               type="text"
               name="timeDuration"
               value={formData.timeDuration}
               onChange={handleInputChange}
               placeholder="e.g. 3 Hours or 90 Mins"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Total Marks</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Total Marks</label>
             <input
               type="number"
               name="totalMarks"
               value={formData.totalMarks}
               onChange={handleInputChange}
               placeholder="e.g. 70 or 100"
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-slate-700 font-bold text-sm mb-1.5">Difficulty Profile</label>
+            <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-1.5">Difficulty Profile</label>
             <select
               name="difficulty"
               value={formData.difficulty}
               onChange={handleInputChange}
-              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 text-sm font-medium bg-white transition-shadow"
+              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-medium transition-shadow"
             >
               <option value="Easy">Easy (Conceptual Fundamentals)</option>
               <option value="Medium">Medium (Balanced Analysis)</option>
@@ -665,12 +665,12 @@ instead of generating incorrect questions.
           </div>
         </div>
 
-        <hr className="border-slate-100" />
+        <hr className="border-slate-100 dark:border-slate-800" />
 
         {/* Specialized Structural Checkbox Selection Layer */}
         <div>
-          <label className="block text-slate-700 font-bold text-sm mb-3">Questions Structural Configuration Matrix</label>
-          <div className="bg-slate-50 rounded-2xl border border-slate-200 divide-y divide-slate-200 overflow-hidden">
+          <label className="block text-slate-700 dark:text-slate-300 font-bold text-sm mb-3">Questions Structural Configuration Matrix</label>
+          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-200 dark:divide-slate-700/60 overflow-hidden">
 
             {[
               { id: "mcq", label: "MCQs (Marks : 1)" },
@@ -678,21 +678,21 @@ instead of generating incorrect questions.
               { id: "oneLiner", label: "One Liner QuestionsMCQs (Marks : 2)" },
               { id: "longQuestion", label: "Long QuestionsMCQs (Marks : 5)" },
             ].map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-4 bg-slate-50/50 hover:bg-white transition-colors duration-150">
+              <div key={item.id} className="flex items-center justify-between p-4 bg-slate-50/50 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800 transition-colors duration-150">
                 {/* Main Checkbox Context */}
-                <label className="flex items-center gap-3 cursor-pointer select-none font-semibold text-slate-700 text-sm">
+                <label className="flex items-center gap-3 cursor-pointer select-none font-semibold text-slate-700 dark:text-slate-200 text-sm">
                   <input
                     type="checkbox"
                     checked={formData.questionTypes[item.id].checked}
                     onChange={() => handleCheckboxChange(item.id, "checked")}
-                    className="w-4 h-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500 transition-colors"
+                    className="w-4 h-4 rounded text-indigo-600 dark:text-indigo-500 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 focus:ring-indigo-500 transition-colors"
                   />
                   {item.label}
                 </label>
 
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-xs font-medium transition-colors duration-150 ${formData.questionTypes[item.id].checked ? "text-slate-600" : "text-slate-300"
+                    className={`text-xs font-medium transition-colors duration-150 ${formData.questionTypes[item.id].checked ? "text-slate-600 dark:text-slate-300" : "text-slate-300 dark:text-slate-600"
                       }`}
                   >
                     Main
@@ -703,13 +703,13 @@ instead of generating incorrect questions.
                     disabled={!formData.questionTypes[item.id].checked}
                     value={formData.questionTypes[item.id].Main}
                     onChange={(e) => handleMainCountChange(item.id, e.target.value)}
-                    className="w-14 px-2 py-1 text-center text-xs font-bold rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-sm"
+                    className="w-14 px-2 py-1 text-center text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-900/40 disabled:text-slate-300 dark:disabled:text-slate-600 transition-all shadow-sm"
                   />
                 </div>
 
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-xs font-medium transition-colors duration-150 ${formData.questionTypes[item.id].checked ? "text-slate-600" : "text-slate-300"
+                    className={`text-xs font-medium transition-colors duration-150 ${formData.questionTypes[item.id].checked ? "text-slate-600 dark:text-slate-300" : "text-slate-300 dark:text-slate-600"
                       }`}
                   >
                     Optional
@@ -721,7 +721,7 @@ instead of generating incorrect questions.
                     disabled={!formData.questionTypes[item.id].checked}
                     value={formData.questionTypes[item.id].Optional}
                     onChange={(e) => handleOptionalCountChange(item.id, e.target.value)}
-                    className="w-14 px-2 py-1 text-center text-xs font-bold rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white disabled:bg-slate-100 disabled:text-slate-300 transition-all shadow-sm"
+                    className="w-14 px-2 py-1 text-center text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 disabled:bg-slate-100 dark:disabled:bg-slate-900/40 disabled:text-slate-300 dark:disabled:text-slate-600 transition-all shadow-sm"
                   />
                 </div>
               </div>
@@ -732,7 +732,7 @@ instead of generating incorrect questions.
 
         <button
           type="submit"
-          className="w-full mt-2 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+          className="w-full mt-2 py-3.5 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 active:scale-[0.99] text-white font-bold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
         >
           Generate Exam Paper 🚀
         </button>

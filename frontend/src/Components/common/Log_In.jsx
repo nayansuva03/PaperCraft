@@ -1,8 +1,9 @@
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const navigate = useNavigate();
+    const handleOnSignin = () => navigate("/signIn");
     const [formData, setFormData] = useState({
         email: "",
         password: ""
@@ -23,15 +24,15 @@ function Login() {
         console.log(formData);
     }
 
-    function handleForgotPassword(){
+    function handleForgotPassword() {
         navigate("/forgot-password");
     }
 
     return (
 
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow">
+        <div className="max-w-md mx-auto mt-10 p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-md transition-colors duration-300">
 
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="text-3xl font-bold mb-6 text-slate-900 dark:text-slate-100">
                 Log In
             </h1>
 
@@ -43,7 +44,7 @@ function Login() {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full border rounded-lg p-3"
+                    className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 focus:border-indigo-500 dark:focus:border-indigo-400 transition"
                 />
 
                 <input
@@ -52,15 +53,33 @@ function Login() {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full border rounded-lg p-3"
+                    className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg p-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 focus:border-indigo-500 dark:focus:border-indigo-400 transition"
                 />
 
                 <button
-                    className="w-full bg-indigo-600 text-white rounded-lg p-3"
+                    type="submit"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 active:scale-[0.99] text-white rounded-lg p-3 font-semibold transition-all duration-200 shadow-sm"
                 >
                     Log In
                 </button>
-                <button onClick={handleForgotPassword}>Forgot password</button>
+
+                <div className="flex flex-col space-y-3 text-center pt-2">
+                    <button
+                        type="button"
+                        onClick={handleOnSignin}
+                        className="text-sm text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline transition-colors font-medium"
+                    >
+                        Don't have an account? Sign up
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                        className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:underline transition-colors font-medium"
+                    >
+                        Forgot password?
+                    </button>
+                </div>
 
             </form>
 

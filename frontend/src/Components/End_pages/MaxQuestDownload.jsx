@@ -128,14 +128,14 @@ function Download() {
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl max-w-lg mx-auto p-8 text-center">
-      <h1 className="text-3xl font-bold text-slate-800 mb-3">
+    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl max-w-lg mx-auto p-8 text-center transition-colors duration-300">
+      <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-3">
         🎉 Questions Ready
       </h1>
 
-      <p className="text-slate-600 mb-6">
+      <p className="text-slate-600 dark:text-slate-400 mb-6">
         Successfully generated{" "}
-        <span className="font-bold text-indigo-600">
+        <span className="font-bold text-indigo-600 dark:text-indigo-400">
           {questions.length}
         </span>{" "}
         questions.
@@ -144,9 +144,9 @@ function Download() {
       <button
         onClick={handleDownload}
         disabled={!questions.length}
-        className={`px-8 py-3 rounded-xl font-semibold text-white transition ${questions.length
-            ? "bg-indigo-600 hover:bg-indigo-700"
-            : "bg-gray-400 cursor-not-allowed"
+        className={`px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 active:scale-[0.99] ${questions.length
+          ? "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-md"
+          : "bg-slate-400 dark:bg-slate-700 cursor-not-allowed"
           }`}
       >
         📄 Download PDF

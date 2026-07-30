@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setGeneratedContent, setLoading } from "../../Redux/download_Pdf_Slice";
 import Loading from "../common/Loading";
-import { generateContent } from "../../Services/generateContent"
+import { generateContent } from "../../Services/generateContent";
 
 function MaxQuestOption() {
   const dispatch = useDispatch();
@@ -47,15 +47,16 @@ function MaxQuestOption() {
         {
           "id": "q1",
           "question": "Which word is a noun?",
-          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"],
           "answer": "C) School"
         },
         {
           "id": "q2",
           "question": "Which word is a noun?",
-          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"]
+          "options": ["A) Run", "B) Beautiful", "C) School", "D) Quickly"],
           "answer": "C) School"
-        },    
+        }
+    ]
     }
         **Example if True or False:
     {
@@ -115,7 +116,6 @@ function MaxQuestOption() {
 instead of generating incorrect questions.
       `;
 
-
     try {
       dispatch(setLoading(true));
       console.log(prompt);
@@ -128,7 +128,6 @@ instead of generating incorrect questions.
       console.error(err);
       alert("Failed to generate questions.(from MaxQuestOption.jsx)");
     }
-
   }
 
   if (isLoading) {
@@ -143,16 +142,16 @@ instead of generating incorrect questions.
     <div className="w-full max-w-4xl px-4 py-8 mx-auto animate-in fade-in duration-200">
       <NavLink
         to="/HomeOptions"
-        className="text-slate-500 hover:text-slate-800 font-semibold text-sm flex items-center gap-2 mb-6 transition-colors"
+        className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-semibold text-sm flex items-center gap-2 mb-6 transition-colors"
       >
         ← Back to Options
       </NavLink>
 
       <div className="mb-8">
-        <h2 className="text-2xl font-extrabold text-slate-800">
+        <h2 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100">
           Select Target Format
         </h2>
-        <p className="text-slate-500 text-sm mt-1">
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Pick the specific structure layout for your mass question build
           pipeline.
         </p>
@@ -163,16 +162,16 @@ instead of generating incorrect questions.
           <div
             key={opt.id}
             onClick={() => handleSelect(opt.title)}
-            className="bg-white p-6 rounded-2xl shadow-md border border-slate-100 hover:border-indigo-400 hover:shadow-lg transition-all duration-200 cursor-pointer flex items-start gap-4 group"
+            className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-lg transition-all duration-200 cursor-pointer flex items-start gap-4 group"
           >
-            <span className="text-3xl p-3 bg-slate-50 rounded-xl group-hover:bg-indigo-50 transition-colors">
+            <span className="text-3xl p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/50 transition-colors">
               {opt.icon}
             </span>
             <div>
-              <h4 className="font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">
+              <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                 {opt.title}
               </h4>
-              <p className="text-slate-500 text-xs leading-relaxed">
+              <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                 {opt.desc}
               </p>
             </div>

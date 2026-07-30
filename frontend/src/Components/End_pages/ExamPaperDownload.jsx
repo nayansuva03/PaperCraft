@@ -373,7 +373,6 @@ function ExamPaperDownload() {
      * Check if we need a new page
      */
     function needsNewPage(doc, currentY, threshold = 250) {
-        const pageHeight = doc.internal.pageSize.getHeight();
         return currentY > threshold;
     }
 
@@ -454,7 +453,7 @@ function ExamPaperDownload() {
             doc.save(fileName);
 
             console.log("✅ Exam paper PDF generated successfully");
-           
+
         } catch (error) {
             console.error("❌ Error generating exam paper:", error);
             alert("❌ Failed to download exam paper. Check console for details.");
@@ -516,7 +515,7 @@ function ExamPaperDownload() {
                 doc.setFont(undefined, "normal");
                 doc.setTextColor(0, 0, 0);
 
-                section.answers.forEach((answer, idx) => {
+                section.answers.forEach((answer) => {
                     if (needsNewPage(doc, currentY, 260)) {
                         doc.addPage();
                         currentY = margin + 10;
@@ -570,9 +569,9 @@ function ExamPaperDownload() {
 
     if (!generatedContent) {
         return (
-            <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md mx-auto text-center">
-                <h1 className="text-2xl font-bold mb-3">⚠️ No Data</h1>
-                <p className="text-gray-600">
+            <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-3xl shadow-xl max-w-md mx-auto text-center transition-colors duration-300">
+                <h1 className="text-2xl font-bold mb-3 text-slate-900 dark:text-slate-100">⚠️ No Data</h1>
+                <p className="text-slate-600 dark:text-slate-400">
                     No exam paper data available to download.
                 </p>
             </div>
@@ -580,34 +579,34 @@ function ExamPaperDownload() {
     }
 
     return (
-        <div className="bg-white p-8 rounded-3xl shadow-xl max-w-2xl mx-auto">
+        <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-3xl shadow-xl max-w-2xl mx-auto transition-colors duration-300">
             {/* Main Title */}
             <div className="mb-8 text-center">
-                <h1 className="text-3xl font-bold mb-2 text-indigo-600">
+                <h1 className="text-3xl font-bold mb-2 text-indigo-600 dark:text-indigo-400">
                     📄 Exam Paper Ready
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-slate-500 dark:text-slate-400">
                     Your exam paper is ready to download
                 </p>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-3 gap-4 mb-8">
-                <div className="bg-blue-50 p-4 rounded-lg text-center border border-blue-200">
-                    <p className="text-gray-600 text-sm">Questions</p>
-                    <p className="text-2xl font-bold text-blue-600">
+                <div className="bg-blue-50 dark:bg-blue-950/40 p-4 rounded-lg text-center border border-blue-200 dark:border-blue-800/60">
+                    <p className="text-slate-600 dark:text-slate-400 text-sm">Questions</p>
+                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                         {totalQuestions}
                     </p>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg text-center border border-green-200">
-                    <p className="text-gray-600 text-sm">Total Marks</p>
-                    <p className="text-2xl font-bold text-green-600">
+                <div className="bg-green-50 dark:bg-green-950/40 p-4 rounded-lg text-center border border-green-200 dark:border-green-800/60">
+                    <p className="text-slate-600 dark:text-slate-400 text-sm">Total Marks</p>
+                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                         {examData.total_marks || 0}
                     </p>
                 </div>
-                <div className="bg-purple-50 p-4 rounded-lg text-center border border-purple-200">
-                    <p className="text-gray-600 text-sm">Answers</p>
-                    <p className="text-2xl font-bold text-purple-600">
+                <div className="bg-purple-50 dark:bg-purple-950/40 p-4 rounded-lg text-center border border-purple-200 dark:border-purple-800/60">
+                    <p className="text-slate-600 dark:text-slate-400 text-sm">Answers</p>
+                    <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                         {totalAnswers}
                     </p>
                 </div>
@@ -615,47 +614,47 @@ function ExamPaperDownload() {
 
             {/* Exam Details */}
             {(examData.institute_name || examData.subject) && (
-                <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-5 rounded-2xl mb-8 border border-slate-200">
-                    <h3 className="font-bold text-slate-800 mb-3">
+                <div className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-800/50 dark:to-slate-800/80 p-5 rounded-2xl mb-8 border border-slate-200 dark:border-slate-700">
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-3">
                         📋 Exam Details
                     </h3>
                     <div className="space-y-2 text-sm">
                         {examData.institute_name && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Institute:</span>
-                                <span className="font-semibold text-gray-800">
+                                <span className="text-slate-600 dark:text-slate-400">Institute:</span>
+                                <span className="font-semibold text-slate-800 dark:text-slate-200">
                                     {examData.institute_name}
                                 </span>
                             </div>
                         )}
                         {examData.subject && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Subject:</span>
-                                <span className="font-semibold text-gray-800">
+                                <span className="text-slate-600 dark:text-slate-400">Subject:</span>
+                                <span className="font-semibold text-slate-800 dark:text-slate-200">
                                     {examData.subject}
                                 </span>
                             </div>
                         )}
                         {examData.course_standard && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Course:</span>
-                                <span className="font-semibold text-gray-800">
+                                <span className="text-slate-600 dark:text-slate-400">Course:</span>
+                                <span className="font-semibold text-slate-800 dark:text-slate-200">
                                     {examData.course_standard}
                                 </span>
                             </div>
                         )}
                         {examData.time_duration && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Duration:</span>
-                                <span className="font-semibold text-gray-800">
+                                <span className="text-slate-600 dark:text-slate-400">Duration:</span>
+                                <span className="font-semibold text-slate-800 dark:text-slate-200">
                                     {examData.time_duration}
                                 </span>
                             </div>
                         )}
                         {examData.difficulty && (
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Difficulty:</span>
-                                <span className="font-semibold text-gray-800">
+                                <span className="text-slate-600 dark:text-slate-400">Difficulty:</span>
+                                <span className="font-semibold text-slate-800 dark:text-slate-200">
                                     {examData.difficulty}
                                 </span>
                             </div>
@@ -671,8 +670,8 @@ function ExamPaperDownload() {
                     onClick={generateExamPaperPDF}
                     disabled={isDownloading || totalQuestions === 0}
                     className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all duration-200 flex items-center justify-center gap-2 ${isDownloading || totalQuestions === 0
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed"
+                        : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-lg hover:shadow-xl active:scale-[0.99]"
                         }`}
                 >
                     {isDownloading ? (
@@ -716,8 +715,8 @@ function ExamPaperDownload() {
                     onClick={generateAnswerSheetPDF}
                     disabled={isDownloading || totalAnswers === 0}
                     className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all duration-200 flex items-center justify-center gap-2 ${isDownloading || totalAnswers === 0
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-green-600 hover:bg-green-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed"
+                        : "bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 shadow-lg hover:shadow-xl active:scale-[0.99]"
                         }`}
                 >
                     {isDownloading ? (
