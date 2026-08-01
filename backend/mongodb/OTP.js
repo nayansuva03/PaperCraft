@@ -2,11 +2,22 @@ import mongoose from "mongoose";
 
 const otpSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     email: {
       type: String,
       required: true,
       lowercase: true,
       trim: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
     },
 
     otp: {
@@ -24,7 +35,6 @@ const otpSchema = new mongoose.Schema(
   },
 );
 
-// Automatically delete expired OTPs
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model("OTP", otpSchema);
