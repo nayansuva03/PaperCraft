@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import {
+    setname,
+    setemail,
+    setisLoggedIn,
+} from "../../Redux/userSlice.js";
 
 function SignIn() {
     const navigate = useNavigate();
@@ -25,21 +30,64 @@ function SignIn() {
 
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        dispatch(setname(formData.name));
-        dispatch(setemail(formData.email));
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                },
+            );
 
-        console.log("Account Details Submitted:", formData);
+            const data = await response.json();
 
-        setShowOTP(true);
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to send sign in formdata");
+            }
+
+
+            alert(data.message);
+
+            setShowOTP(true);
+
+        } catch (error) {
+            console.error("Error sending sign in formdata", error);
+        }
     }
 
-    function handleOtpSubmit(e) {
+    async function handleOtpSubmit(e) {
         e.preventDefault();
 
-        // OTP verification logic later
-        console.log("OTP Submitted:", otp);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: formData.email,
+                    otp,
+                }),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong sending OTP.");
+            }
+            console.log(data.message);
+            dispatch(setname(data.user.name));
+            dispatch(setemail(data.user.email));
+            dispatch(setisLoggedIn(true));
+            navigate("/");
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     return (

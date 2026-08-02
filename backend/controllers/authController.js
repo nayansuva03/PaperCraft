@@ -3,6 +3,9 @@ import OTP from "../mongodb/OTP.js";
 import generateOTP from "../utils/generateOTP.js";
 import bcrypt from "bcryptjs";
 import sendEmail from "../utils/sendEmail.js";
+import generateAccessToken from "../utils/generateAccessToken.js";
+import generateRefreshToken from "../utils/generateRefreshToken.js";
+import setAuthCookies from "../utils/setAuthCookies.js";
 
 export const signup = async (req, res) => {
   try {
@@ -112,21 +115,26 @@ export const verifySignupOTP = async (req, res) => {
       });
     }
 
-    const newUser = new User({
+    const newUser = await User.create({
       name: otpDoc.name,
       email: otpDoc.email,
       password: otpDoc.password,
       isVerified: true,
     });
 
-    await newUser.save();
+    const accessToken = generateAccessToken(newUser);
+    const refreshToken = generateRefreshToken(newUser);
+    setAuthCookies(res, accessToken, refreshToken);
     await OTP.deleteOne({ _id: otpDoc._id });
 
     return res.status(201).json({
       success: true,
       message: "New User Created.",
+      user: {
+        name: newUser.name,
+        email: newUser.email,
+      },
     });
-    
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -148,7 +156,7 @@ export const login = async (req, res) => {
     }
 
     email = email.trim().toLowerCase();
-    
+
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res.status(401).json({
@@ -166,14 +174,26 @@ export const login = async (req, res) => {
       return res
         .status(401)
         .json({ success: false, message: "Invalid email or password." });
-    } 
-      return res.status(200).json({
-        success: true,
-        message: "Login successful.",
-      });
-    
+    }
+    const accessToken = generateAccessToken(existingUser);
+    const refreshToken = generateRefreshToken(existingUser);
+
+    setAuthCookies(res, accessToken, refreshToken);
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      user: {
+        name: existingUser.name,
+        email: existingUser.email,
+      },
+    });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 

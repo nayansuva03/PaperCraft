@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+    setname,
+    setemail,
+    setisLoggedIn,
+} from "../../Redux/userSlice.js";
 
 function Login() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const handleOnSignin = () => navigate("/signIn");
     const [formData, setFormData] = useState({
         email: "",
@@ -16,12 +24,33 @@ function Login() {
         });
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+            const data = await response.json();
 
-        // Login request later
-
-        console.log(formData);
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong While Loging in.");
+            }
+            console.log(data.message);
+            dispatch(setname(data.user.name));
+            dispatch(setemail(data.user.email));
+            dispatch(setisLoggedIn(true));
+            navigate("/");
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     function handleForgotPassword() {
