@@ -18,13 +18,14 @@ connectDB();
 
 app.use(
   cors({
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   }),
 );
 app.use(cookieParser());
 app.use(express.json());
 app.use(cookieParser());
-
+console.log("CORS_ORIGIN =", process.env.CORS_ORIGIN);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/auth", authRoutes);
 
