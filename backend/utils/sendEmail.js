@@ -1,9 +1,15 @@
 import { Resend } from "resend";
-const resend = new Resend(process.env.RESEND_API_KEY);
+import dotenv from "dotenv";
+dotenv.config();
 
-await resend.emails.send({
-  from: "PaperCraft <nayan.suva.ahir.0369@gmail.com>",
-  to,
-  subject,
-  html,
-});
+const sendEmail = async (to, subject, html) => {
+  const resend = new Resend(process.env.RESEND_API_KEY); // create it INSIDE the function
+  await resend.emails.send({
+    from: "PaperCraft <onboarding@resend.dev>",
+    to,
+    subject,
+    html,
+  });
+};
+
+export default sendEmail;
