@@ -1,26 +1,22 @@
-import nodemailer from "nodemailer";
+import * as brevo from "@getbrevo/brevo";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.BREVO_SMTP_HOST,
-  port: Number(process.env.BREVO_SMTP_PORT),
-  secure: false, // true only for port 465
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_KEY,
-  },
-});
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY,
+);
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
-      to,
-      subject,
-      html,
-    });
+    const email = new brevo.SendSmtpEmail();
+    email.sender = { name: "PaperCraft", email: "papercraft-nyn@outlook.com" };
+    email.to = [{ email: to }];
+    email.subject = subject;
+    email.htmlContent = html;
+
+    const info = await apiInstance.sendTransacEmail(email);
     return info;
   } catch (err) {
     console.error("Email send failed:", err.message);
