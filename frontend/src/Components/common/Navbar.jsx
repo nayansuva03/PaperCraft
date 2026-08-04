@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTheme } from "../../Redux/themeSlice";
 import { useState } from "react";
 import { Menu, X, Sun, Moon, User, LogOut } from "lucide-react";
-
+import {
+  setname,
+  setemail,
+  setisLoggedIn,
+} from "../../Redux/userSlice.js";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,7 +27,11 @@ function Navbar() {
 
   const handleOnLogin = () => navigate("/LogIn");
   const handleOnSignin = () => navigate("/signIn");
-  const handleOnLogout = () => navigate("/");
+  const handleOnLogout = () => {
+    dispatch(setname(""));
+    dispatch(setemail(""));
+    dispatch(setisLoggedIn(false));
+  }
   const handleToggleTheme = () => {
     dispatch(setTheme(theme === "dark" ? "light" : "dark"));
   };

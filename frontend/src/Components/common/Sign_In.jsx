@@ -71,7 +71,7 @@ function SignIn() {
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                    email: formData.email,
+                    formData: formData,
                     otp,
                 }),
             });

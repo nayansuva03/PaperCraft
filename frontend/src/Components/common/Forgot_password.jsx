@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
 
     const [step, setStep] = useState(1);
-
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
 
@@ -11,6 +12,87 @@ function ForgotPassword() {
         password: "",
         confirmPassword: ""
     });
+
+    async function handleEmailSend(e) {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/forgot-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email}),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "eroor sending email.");
+            }
+
+            console.log(data.message);
+            setStep(2);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function verifyOTP(e) {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-forgot-password`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    otp,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong while sending otp to backend")
+            }
+
+            console.log(data.message);
+
+            setStep(3);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function resetPassword(e) {
+        e.preventDefault();
+        if (passwords.password !== passwords.confirmPassword) {
+            console.error("Passwords do not match");
+            return;
+        }
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email, password: passwords.password}),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Something went wrong while sending resetPassword to backend")
+            }
+            console.log(data.message);
+            navigate("/")
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
 
@@ -33,10 +115,7 @@ function ForgotPassword() {
                     />
 
                     <button
-                        onClick={() => {
-                            // Send OTP later
-                            setStep(2);
-                        }}
+                        onClick={handleEmailSend}
                         className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 active:scale-[0.99] text-white rounded-lg p-3 font-semibold transition-all duration-200 shadow-sm"
                     >
                         Send OTP
@@ -58,10 +137,7 @@ function ForgotPassword() {
                     />
 
                     <button
-                        onClick={() => {
-                            // Verify OTP later
-                            setStep(3);
-                        }}
+                        onClick={verifyOTP}
                         className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 active:scale-[0.99] text-white rounded-lg p-3 font-semibold transition-all duration-200 shadow-sm"
                     >
                         Verify OTP
@@ -103,6 +179,7 @@ function ForgotPassword() {
 
                     <button
                         className="w-full bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 active:scale-[0.99] text-white rounded-lg p-3 font-semibold transition-all duration-200 shadow-sm"
+                        onClick={resetPassword}
                     >
                         Change Password
                     </button>
