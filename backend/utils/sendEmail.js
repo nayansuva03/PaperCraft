@@ -1,22 +1,19 @@
-import * as brevo from "@getbrevo/brevo";
+import { BrevoClient } from "@getbrevo/brevo";
 import dotenv from "dotenv";
 dotenv.config();
 
-const apiInstance = new brevo.TransactionalEmailsApi();
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY,
-);
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
 
 const sendEmail = async ({ to, subject, html }) => {
   try {
-    const email = new brevo.SendSmtpEmail();
-    email.sender = { name: "PaperCraft", email: "papercraft-nyn@outlook.com" };
-    email.to = [{ email: to }];
-    email.subject = subject;
-    email.htmlContent = html;
-
-    const info = await apiInstance.sendTransacEmail(email);
+    const info = await brevo.transactionalEmails.sendTransacEmail({
+      sender: { name: "PaperCraft", email: "papercraft-nyn@outlook.com" },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    });
     return info;
   } catch (err) {
     console.error("Email send failed:", err.message);
