@@ -40,21 +40,17 @@ export const signup = async (req, res) => {
       otp,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     });
-    await sendEmail(
-      email,
-      "PaperCraft Email Verification",
-      `
+    await sendEmail({
+      to: email,
+      subject: "PaperCraft Email Verification",
+      html: `
     <h2>Welcome to PaperCraft!</h2>
-
     <p>Your verification code is:</p>
-
     <h1 style="letter-spacing:5px;">${otp}</h1>
-
     <p>This code will expire in <strong>5 minutes</strong>.</p>
-
     <p>If you didn't request this, you can safely ignore this email.</p>
   `,
-    );
+    });
     return res.status(200).json({
       success: true,
       message: "OTP is Created and Sent Successfully.",
@@ -219,21 +215,17 @@ return res.status(400).json({
       otp,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     });
-    await sendEmail(
-      email,
-      "PaperCraft Email Verification",
-      `
+    await sendEmail({
+      to: email,
+      subject: "PaperCraft Email Verification",
+      html: `
     <h2>Reset Password request from PaperCraft!</h2>
-
     <p>Your verification code is:</p>
-
     <h1 style="letter-spacing:5px;">${otp}</h1>
-
     <p>This code will expire in <strong>5 minutes</strong>.</p>
-
     <p>If you didn't request this, you can safely ignore this email.</p>
   `,
-    );
+    });
     return res.status(200).json({
       success: true,
       message: "OTP is Created and Sent Successfully.",
