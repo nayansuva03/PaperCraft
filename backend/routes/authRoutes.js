@@ -11,6 +11,7 @@ import {
   logout,
   refreshAccessToken,
 } from "../controllers/authController.js";
+import askGemini from "../controllers/geminiController.js";
 
 const router = express.Router();
 

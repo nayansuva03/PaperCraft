@@ -9,12 +9,14 @@ export const createFeedback = async (req, res) => {
         message: "Can't access email or GuestName",
       });
     }
+
     if (!req.body.message?.trim()) {
       return res.status(400).json({
         success: false,
         message: "message is required",
       });
     }
+    
     const {
       name,
       guestName,

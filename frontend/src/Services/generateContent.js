@@ -7,7 +7,7 @@ export async function generateContent(prompt, file) {
   formData.append("prompt", prompt);
   formData.append("pdf", file[0]);
   const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/api/generate`,
+    `${import.meta.env.VITE_BACKEND_URL}/api/gemini/generate`,
     {
       method: "POST",
       body: formData,
