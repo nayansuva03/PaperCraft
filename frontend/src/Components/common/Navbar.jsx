@@ -27,7 +27,12 @@ function Navbar() {
 
   const handleOnLogin = () => navigate("/LogIn");
   const handleOnSignin = () => navigate("/signIn");
-  const handleOnLogout = () => {
+  const handleOnLogout = async () => {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
     dispatch(setname(""));
     dispatch(setemail(""));
     dispatch(setisLoggedIn(false));

@@ -16,10 +16,79 @@ import LogIn from "./Components/common/Log_In";
 import SignIn from "./Components/common/Sign_In";
 import ForgotPassword from "./Components/common/Forgot_password";
 import { Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setname, setemail, setisLoggedIn } from "./Redux/userSlice";
 
 function App() {
+  const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.theme);
 
+  function loginUser(user) {
+    dispatch(setname(user.name));
+    dispatch(setemail(user.email));
+    dispatch(setisLoggedIn(true));
+  }
+
+  function logoutUser() {
+    dispatch(setname(""));
+    dispatch(setemail(""));
+    dispatch(setisLoggedIn(false));
+  }
+
+  async function checkAuth() {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+        credentials: "include",
+      });
+      if (response.ok) {
+        const data = await response.json();
+
+        loginUser(data.user);
+
+        return;
+      }
+
+      if (response.status !== 401) {
+        logoutUser();
+        return;
+      }
+
+      const refreshResponse = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/refresh-token`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      if (!refreshResponse.ok) {
+        logoutUser();
+        return;
+      }
+
+      const retryResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+        credentials: "include",
+      });
+      if (retryResponse.ok) {
+        const data = await retryResponse.json();
+
+        loginUser(data.user);
+
+        return;
+      }
+      logoutUser();
+      return;
+      
+    } catch (error) {
+      console.error(error);
+      logoutUser();
+    }
+  }
+  
+  useEffect(() => {
+    checkAuth();
+  }, []);
+  
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "dark") {

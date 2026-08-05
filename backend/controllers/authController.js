@@ -194,19 +194,19 @@ export const login = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     let { email } = req.body;
-    if(!email){
+    if (!email) {
       return res.status(400).json({
         success: false,
-        message: "Please Enter Email."
+        message: "Please Enter Email.",
       });
     }
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
 
-    if(!user){
-return res.status(400).json({
-  success: false,
-  message: "The Email Doesn't exist.",
-});
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "The Email Doesn't exist.",
+      });
     }
     await OTP.deleteMany({ email });
     const otp = generateOTP();
@@ -243,15 +243,15 @@ return res.status(400).json({
 export const verifyForgotOTP = async (req, res) => {
   try {
     let { email, otp } = req.body;
-    if(!otp || !email){
+    if (!otp || !email) {
       return res.status(400).json({
-success: false,
-message: "OTP and Email Reqired.",
+        success: false,
+        message: "OTP and Email Reqired.",
       });
     }
     const trueOTP = await OTP.findOne({ email });
     if (new Date() > trueOTP.expiresAt) {
-      await OTP.deleteOne({ _id: otpDoc._id });
+      await OTP.deleteOne({ _id: trueOTP._id });
       return res
         .status(400)
         .json({ success: false, message: "OTP has expired." });
@@ -284,7 +284,6 @@ export const resetPassword = async (req, res) => {
         .json({ success: false, message: "OTP verification required." });
     }
 
-    const user = await User.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.updateOne(
@@ -302,5 +301,87 @@ export const resetPassword = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Get Current User Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully.",
+  });
+};
+
+export const refreshAccessToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token not found. Please log in again.",
+      });
+    }
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found. Please log in again.",
+      });
+    }
+    const newAccessToken = generateAccessToken(user);
+
+    setAuthCookies(res, newAccessToken, refreshToken);
+
+    return res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully.",
+    });
+  } catch (error) {
+     console.error(error);
+
+     return res.status(401).json({
+       success: false,
+       message: "Invalid or expired refresh token.",
+     });
   }
 };
