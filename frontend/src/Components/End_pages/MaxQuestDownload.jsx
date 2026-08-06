@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import jsPDF from "jspdf";
 import Feedback from "../common/Feedback";
+import { saveGeneratedPdf } from "../../utils/saveGeneratedPdf"
 
 function Download() {
   const generatedContent = useSelector(
@@ -125,6 +126,7 @@ function Download() {
     const date = new Date().toISOString().split("T")[0];
 
     doc.save(`Questions-${date}.pdf`);
+    saveGeneratedPdf(resultDoc, "quiz", quizTitle);
   }
 
   return (

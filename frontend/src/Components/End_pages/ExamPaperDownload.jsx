@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import jsPDF from "jspdf";
 import Feedback from "../common/Feedback";
+import { saveGeneratedPdf } from "../../utils/saveGeneratedPdf"
 
 function ExamPaperDownload() {
     const generatedContent = useSelector((s) => s.Downloaded_pdf.generatedContent);
@@ -451,7 +452,7 @@ function ExamPaperDownload() {
             // Save PDF
             const fileName = `${examData.subject || "exam"}-paper.pdf`;
             doc.save(fileName);
-
+            saveGeneratedPdf(doc, "exampaper", examTitle);
             console.log("✅ Exam paper PDF generated successfully");
 
         } catch (error) {

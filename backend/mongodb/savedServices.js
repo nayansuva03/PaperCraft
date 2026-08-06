@@ -1,48 +1,32 @@
 import mongoose from "mongoose";
 
-const savedServiceSchema = new mongoose.Schema(
+const savedPdfSchema = new mongoose.Schema(
   {
-    email: {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    type: {
       type: String,
+      enum: ["maxquestion", "exampaper", "quiz"],
       required: true,
     },
-
-    serviceType: {
-      type: String,
-      enum: [
-        "ExamPaper",
-        "OnlineQuiz",
-        "MCQ",
-        "TrueFalse",
-        "OneLiner",
-        "LongQuestions",
-      ],
-      required: true,
-    },
-
     title: {
       type: String,
-      required: true,
+      required: true, // e.g. subject name or "Physics - Chapter 3"
     },
-
-    subject: {
-      type: String,
-      default: "",
-    },
-
-    pdfUrl: {
+    cloudinaryUrl: {
       type: String,
       required: true,
     },
-
-    generatedContentId: {
+    cloudinaryPublicId: {
       type: String,
-      default: "",
+      required: true, // needed to delete from Cloudinary later
     },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
-export default mongoose.model("SavedService", savedServiceSchema);
+export default mongoose.model("SavedPdf", savedPdfSchema);
