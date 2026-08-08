@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Feedback from "../common/Feedback";
+import { generateQuizResultPdf } from "../../Services/generateQuizResultPdf";
+import { saveGeneratedPdf } from "../../Services/saveGeneratedPdf";
 
 function QuizResult({ questions, userAnswers, onRestart }) {
     const navigate = useNavigate();
@@ -20,6 +22,24 @@ function QuizResult({ questions, userAnswers, onRestart }) {
     }, 0);
 
     const percentage = Math.round((score / questions.length) * 100);
+
+    const handleDownloadResult = async () => {
+        const doc = generateQuizResultPdf(questions, userAnswers);
+
+        const date = new Date().toISOString().split("T")[0];
+
+        // Download locally
+        doc.save(`Quiz-Result-${date}.pdf`);
+
+        // Save to Cloudinary/backend
+        const pdfBlob = doc.output("blob");
+
+        await saveGeneratedPdf(
+            pdfBlob,
+            "quiz",
+            `Quiz-Result-${date}`
+        );
+    };
 
     return (
         <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 sm:p-10 rounded-3xl shadow-xl w-full max-w-3xl transition-colors duration-300 animate-in fade-in duration-200">

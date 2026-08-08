@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import jsPDF from "jspdf";
 import Feedback from "../common/Feedback";
-import { saveGeneratedPdf } from "../../utils/saveGeneratedPdf"
+import { saveGeneratedPdf } from "../../Services/saveGeneratedPdf"
 
 function Download() {
   const generatedContent = useSelector(
