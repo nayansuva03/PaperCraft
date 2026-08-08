@@ -1,6 +1,6 @@
 export async function generateContent(prompt, file) {
-  console.log("From genetarecontent.js(prompt) : " + prompt);
-  console.log("From genetarecontent.js(file) : " + file);
+  //console.log("From genetarecontent.js(prompt) : " + prompt);
+  //console.log("From genetarecontent.js(file) : " + file);
 
   const formData = new FormData();
 

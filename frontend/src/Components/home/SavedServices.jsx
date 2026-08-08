@@ -1,4 +1,18 @@
-function SavedServices({ isLoggedIn, onLogin }) {
+'use client'
+
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+
+
+function SavedServices() {
+
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const navigate = useNavigate();
+
+  function onLogin (){
+    navigate("/signIn")
+  }
 
   if (!isLoggedIn) {
     return (
@@ -17,9 +31,7 @@ function SavedServices({ isLoggedIn, onLogin }) {
       </div>
     );
   }
-  //-------------------------------------------------------------------------------------------------------------------------------------------------
-  // TODO:
-  // this section will be used for storing previse pdfs after i connect it to database.
+ 
   return (
     <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl text-center max-w-md border border-slate-100 dark:border-slate-800 transition-colors duration-300">
       <span className="text-4xl">📚</span>

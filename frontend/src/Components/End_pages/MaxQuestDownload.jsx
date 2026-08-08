@@ -126,8 +126,9 @@ function Download() {
     const date = new Date().toISOString().split("T")[0];
 
     doc.save(`Questions-${date}.pdf`);
-    saveGeneratedPdf(resultDoc, "quiz", quizTitle);
-  }
+    const title = generatedContent?.title || "Questions";
+    saveGeneratedPdf(doc, "quiz", title);
+      }
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl max-w-lg mx-auto p-8 text-center transition-colors duration-300">
