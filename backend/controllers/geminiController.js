@@ -1,16 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
+import geminiUsageMetaData from "../mongodb/geminiUsageMetaData.js";
 
-  const genAi = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAi = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
 async function askGemini(req, res) {
-
   try {
     const prompt = req.body.prompt;
+
     if (!req.file) {
       return res.status(400).json({
         message: "No PDF uploaded.",
       });
     }
+
     const base64PDF = req.file.buffer.toString("base64");
 
     const response = await genAi.models.generateContent({
@@ -32,8 +36,8 @@ async function askGemini(req, res) {
         },
       ],
     });
-    //console.log("got a response");
-    //console.log("response.text : " + response.text);
+
+    const usage = response.usageMetadata;
 
     const text = response.text
       .replace(/```json/g, "")
@@ -45,21 +49,47 @@ async function askGemini(req, res) {
     try {
       parsedContent = JSON.parse(text);
     } catch {
+      await geminiUsageMetaData.create({
+        inputTokens: usage.promptTokenCount,
+        outputTokens: usage.candidatesTokenCount,
+        totalTokens: usage.totalTokenCount,
+
+        success: false,
+        error: true,
+      });
+
       return res.status(500).json({
         message: "Gemini returned invalid JSON.",
         rawResponse: text,
       });
     }
-    //again uper thi aavta bhangbhosda ne redable banave
+
+    // Gemini request + application processing succeeded
+    await geminiUsageMetaData.create({
+      inputTokens: usage.promptTokenCount,
+      outputTokens: usage.candidatesTokenCount,
+      totalTokens: usage.totalTokenCount,
+
+      success: true,
+      error: false,
+    });
 
     res.status(200).json(parsedContent);
-    //"res.json()"(function from express js not just .json();) converts the js object into plain text to it can pass it.
-    //leter in frontend normal .json() function will convert it back to js object.
-    //number khali raikha se mane maja aave etle remove karso fer ny pade.
   } catch (error) {
     console.log(error);
+
+    // Gemini/API/server error
+    await geminiUsageMetaData.create({
+      inputTokens: 0,
+      outputTokens: 0,
+      totalTokens: 0,
+
+      success: false,
+      error: true,
+    });
+
     res.status(500).json({
-      //aa number important se error mate etle aane na kadhta.
+      // aa number important se error mate etle aane na kadhta.
       message: "Failed to generate content(From server.js).",
       error: error.message,
     });
