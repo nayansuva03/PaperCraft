@@ -1,8 +1,11 @@
 import cloudinary from "../config/cloudinary.js";
-import SavedPdf from "../models/SavedPdf.js";
+import savedServices from "../mongodb/savedServices.js";
+
 
 // POST /api/saved-pdfs
 export const savePdf = async (req, res) => {
+  console.log("savePdf was called");
+  
   try {
     const { type, title } = req.body;
     if (!req.file)
@@ -25,7 +28,7 @@ export const savePdf = async (req, res) => {
       stream.end(req.file.buffer);
     });
 
-    const saved = await SavedPdf.create({
+    const saved = await savedServices.create({
       user: req.user._id,
       type,
       title: title || "Untitled",
@@ -41,9 +44,9 @@ export const savePdf = async (req, res) => {
 };
 
 // GET /api/saved-pdfs
-export const getSavedPdfs = async (req, res) => {
+export const getsavedServicess = async (req, res) => {
   try {
-    const pdfs = await SavedPdf.find({ user: req.user._id }).sort({
+    const pdfs = await savedServices.find({ user: req.user._id }).sort({
       createdAt: -1,
     });
     res.json(pdfs);
@@ -53,9 +56,9 @@ export const getSavedPdfs = async (req, res) => {
 };
 
 // DELETE /api/saved-pdfs/:id
-export const deleteSavedPdf = async (req, res) => {
+export const deletesavedServices = async (req, res) => {
   try {
-    const pdf = await SavedPdf.findOne({
+    const pdf = await savedServices.findOne({
       _id: req.params.id,
       user: req.user._id,
     });

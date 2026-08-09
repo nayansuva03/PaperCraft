@@ -127,7 +127,7 @@ function Download() {
 
     doc.save(`Questions-${date}.pdf`);
     const title = generatedContent?.title || "Questions";
-    saveGeneratedPdf(doc, "quiz", title);
+    saveGeneratedPdf(doc, "maxquestion", title);
       }
 
   return (

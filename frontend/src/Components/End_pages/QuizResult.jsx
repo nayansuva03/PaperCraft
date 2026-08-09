@@ -32,10 +32,9 @@ function QuizResult({ questions, userAnswers, onRestart }) {
         doc.save(`Quiz-Result-${date}.pdf`);
 
         // Save to Cloudinary/backend
-        const pdfBlob = doc.output("blob");
-
+        
         await saveGeneratedPdf(
-            pdfBlob,
+            doc,
             "quiz",
             `Quiz-Result-${date}`
         );

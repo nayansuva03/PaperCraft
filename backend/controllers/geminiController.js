@@ -32,8 +32,8 @@ async function askGemini(req, res) {
         },
       ],
     });
-    console.log("got a response");
-    console.log("response.text : " + response.text);
+    //console.log("got a response");
+    //console.log("response.text : " + response.text);
 
     const text = response.text
       .replace(/```json/g, "")

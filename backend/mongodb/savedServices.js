@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const savedPdfSchema = new mongoose.Schema(
+const savedServicesSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +15,7 @@ const savedPdfSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true, // e.g. subject name or "Physics - Chapter 3"
+      required: true,
     },
     cloudinaryUrl: {
       type: String,
@@ -29,4 +29,4 @@ const savedPdfSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model("SavedPdf", savedPdfSchema);
+export default mongoose.model("SavedServices", savedServicesSchema);
