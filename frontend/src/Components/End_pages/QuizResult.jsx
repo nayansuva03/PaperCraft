@@ -32,7 +32,7 @@ function QuizResult({ questions, userAnswers, onRestart }) {
         doc.save(`Quiz-Result-${date}.pdf`);
 
         // Save to Cloudinary/backend
-        
+
         await saveGeneratedPdf(
             doc,
             "quiz",
@@ -67,10 +67,10 @@ function QuizResult({ questions, userAnswers, onRestart }) {
                         <div
                             key={index}
                             className={`p-5 rounded-2xl border-2 transition-colors ${isCorrect
-                                    ? "border-green-100 dark:border-green-900/40 bg-green-50/30 dark:bg-green-950/20"
-                                    : isSkipped
-                                        ? "border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40"
-                                        : "border-red-100 dark:border-red-900/40 bg-red-50/30 dark:bg-red-950/20"
+                                ? "border-green-100 dark:border-green-900/40 bg-green-50/30 dark:bg-green-950/20"
+                                : isSkipped
+                                    ? "border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40"
+                                    : "border-red-100 dark:border-red-900/40 bg-red-50/30 dark:bg-red-950/20"
                                 }`}
                         >
                             <h3 className="font-bold text-slate-800 dark:text-slate-200 mb-3">
@@ -96,6 +96,12 @@ function QuizResult({ questions, userAnswers, onRestart }) {
             </div>
 
             <div className="flex gap-4">
+                <button
+                    onClick={handleDownloadResult}
+                    className="flex-1 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md active:scale-[0.99] transition-all"
+                >
+                    Download Result
+                </button>
                 <button
                     onClick={onRestart}
                     className="flex-1 py-3.5 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 font-bold rounded-xl active:scale-[0.99] transition-all"

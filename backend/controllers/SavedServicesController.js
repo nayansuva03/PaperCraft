@@ -18,18 +18,25 @@ export const savePdf = async (req, res) => {
     const uploadResult = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          resource_type: "raw",
-          folder: `papercraft/${req.user._id}`,
+          resource_type: "image",
+          folder: `papercraft/${req.user.id}`,
           public_id: `${type}_${Date.now()}`,
           format: "pdf",
         },
-        (err, result) => (err ? reject(err) : resolve(result)),
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
       );
+
       stream.end(req.file.buffer);
     });
 
     const saved = await savedServices.create({
-      user: req.user._id,
+      user: req.user.id,
       type,
       title: title || "Untitled",
       cloudinaryUrl: uploadResult.secure_url,
@@ -46,9 +53,13 @@ export const savePdf = async (req, res) => {
 // GET /api/saved-pdfs
 export const getsavedServicess = async (req, res) => {
   try {
-    const pdfs = await savedServices.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const pdfs = await savedServices
+      .find({
+        user: req.user.id,
+      })
+      .sort({
+        createdAt: -1,
+      });
     res.json(pdfs);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch saved PDFs" });
@@ -60,12 +71,12 @@ export const deletesavedServices = async (req, res) => {
   try {
     const pdf = await savedServices.findOne({
       _id: req.params.id,
-      user: req.user._id,
+      user: req.user.id,
     });
     if (!pdf) return res.status(404).json({ message: "Not found" });
 
     await cloudinary.uploader.destroy(pdf.cloudinaryPublicId, {
-      resource_type: "raw",
+      resource_type: "image",
     });
     await pdf.deleteOne();
 

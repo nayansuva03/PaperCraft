@@ -6,6 +6,7 @@ import sendEmail from "../utils/sendEmail.js";
 import generateAccessToken from "../utils/generateAccessToken.js";
 import generateRefreshToken from "../utils/generateRefreshToken.js";
 import setAuthCookies from "../utils/setAuthCookies.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   try {
