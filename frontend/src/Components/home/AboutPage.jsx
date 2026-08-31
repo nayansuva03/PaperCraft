@@ -66,6 +66,73 @@ function About() {
     "Save generated papers and quizzes to MongoDB for cloud persistence"
   ];
 
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePayment = async () => {
+    const loaded = await loadRazorpay();
+
+    if (!loaded) {
+      alert("Razorpay SDK failed to load");
+      return;
+    }
+
+    const response = await fetch(
+      "http://localhost:5000/api/payment/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+      amount: data.order.amount,
+      currency: data.order.currency,
+
+      name: "My Website",
+      description: "Test Payment",
+
+      order_id: data.order.id,
+
+      handler: async function (response) {
+        console.log(response);
+
+        // Send payment details to backend
+        await fetch("http://localhost:5000/api/payment/verify", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(response),
+        });
+      },
+
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+
+    razorpay.open();
+  };
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-4xl p-6 sm:p-10 my-6 transition-colors duration-300 animate-in fade-in duration-300">
 
@@ -186,6 +253,11 @@ function About() {
           ))}
         </ol>
       </div>
+      
+      <div className="bg-gradient-to-r from-indigo-50 to-slate-50 dark:from-indigo-950/30 dark:to-slate-800/40 p-6 rounded-2xl border border-slate-100/80 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left my-5">
+        <h2>Pay Nayan ₹10 so he can eat kurkure</h2>
+        <button onClick={handlePayment}  className="bg-blue-400 p-2 rounded-xl">Pay ₹10</button>
+          </div>
 
       {/* Developer Profile Card */}
       <div className="bg-gradient-to-r from-indigo-50 to-slate-50 dark:from-indigo-950/30 dark:to-slate-800/40 p-6 rounded-2xl border border-slate-100/80 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">

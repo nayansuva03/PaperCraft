@@ -6,6 +6,7 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import geminiRoutes from "./routes/geminiRoutes.js";
 import SavedServicesRoutes from "./routes/SavedServicesRoutes.js"
+import RazorpayRoutes from "./routes/razorpayRoutes.js";
 import sendEmail from "./utils/sendEmail.js";
 import cookieParser from "cookie-parser";
 
@@ -23,10 +24,12 @@ app.use(
 );
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/gemini", geminiRoutes);
 app.use("/api", SavedServicesRoutes);
+app.use("/api/payment", RazorpayRoutes)
 
 app.get("/test-email", async (req, res) => {
   try {
