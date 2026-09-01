@@ -4,7 +4,7 @@ import crypto from "crypto";
 export async function createRazorpayOrder(req, res) {
   try {
     const options = {
-      amount: 10 * 100,
+      amount: 1 * 100,
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };

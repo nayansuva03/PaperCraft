@@ -88,7 +88,7 @@ function About() {
     }
 
     const response = await fetch(
-      "http://localhost:5000/api/payment/create-order",
+      `${import.meta.env.VITE_BACKEND_KEY}/api/payment/create-order`,
       {
         method: "POST",
         headers: {
@@ -114,7 +114,7 @@ function About() {
         console.log(response);
 
         // Send payment details to backend
-        await fetch("http://localhost:5000/api/payment/verify", {
+        await fetch(`${import.meta.env.VITE_BACKEND_KEY}/api/payment/verify`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
