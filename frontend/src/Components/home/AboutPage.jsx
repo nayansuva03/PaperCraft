@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 
 function About() {
   const frontendTech = [
@@ -79,60 +79,66 @@ function About() {
     });
   };
 
+  const [isPaying, setIsPaying] = useState(false);
+
   const handlePayment = async () => {
-    const loaded = await loadRazorpay();
+    setIsPaying(true);
+    try {
+      const loaded = await loadRazorpay();
 
-    if (!loaded) {
-      alert("Razorpay SDK failed to load");
-      return;
-    }
-
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/payment/create-order`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (!loaded) {
+        alert("Razorpay SDK failed to load");
+        setIsPaying(false);
+        return;
       }
-    );
 
-    const data = await response.json();
-
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-
-      amount: data.order.amount,
-      currency: data.order.currency,
-
-      name: "My Website",
-      description: "Test Payment",
-
-      order_id: data.order.id,
-
-      handler: async function (response) {
-        console.log(response);
-
-        // Send payment details to backend
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payment/verify`, {
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/payment/create-order`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(response),
-        });
-      },
+        }
+      );
 
-      theme: {
-        color: "#3399cc",
-      },
-    };
+      const data = await response.json();
 
-    const razorpay = new window.Razorpay(options);
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: "My Website",
+        description: "Test Payment",
+        order_id: data.order.id,
+        handler: async function (response) {
+          console.log(response);
+          await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payment/verify`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(response),
+          });
+          setIsPaying(false);
+        },
+        modal: {
+          ondismiss: function () {
+            setIsPaying(false);
+          },
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
 
-    razorpay.open();
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (err) {
+      console.error(err);
+      setIsPaying(false);
+    }
   };
-
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800 w-full max-w-4xl p-6 sm:p-10 my-6 transition-colors duration-300 animate-in fade-in duration-300">
 
@@ -253,11 +259,46 @@ function About() {
           ))}
         </ol>
       </div>
-      
-      <div className="bg-gradient-to-r from-indigo-50 to-slate-50 dark:from-indigo-950/30 dark:to-slate-800/40 p-6 rounded-2xl border border-slate-100/80 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left my-5">
-        <h2>Pay Nayan ₹10 so he can eat kurkure</h2>
-        <button onClick={handlePayment}  className="bg-blue-400 p-2 rounded-xl">Pay ₹10</button>
+
+      {/* Improved Payment Card Section */}
+      <div className="my-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-indigo-50 dark:from-slate-800/80 dark:via-indigo-950/40 dark:to-slate-800/80 p-6 border border-amber-200/60 dark:border-slate-700/60 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-5 text-center sm:text-left">
+          <div className="flex items-center gap-3.5">
+            <div className="text-3xl p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-amber-100 dark:border-slate-700 shrink-0">
+              🍬
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100/80 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 mb-1 border border-amber-200/50 dark:border-amber-800/50">
+                Support The Developer
+              </div>
+              <h3 className="text-base font-bold text-slate-800 dark:text-slate-100">
+                Buy Nayan a KissMe Chocolate
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Support the maintenance of PaperCraft with a quick micro-contribution.
+              </p>
+            </div>
           </div>
+
+          <button
+            onClick={handlePayment}
+            disabled={isPaying}
+            className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-sm px-6 py-3 rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          >
+            {isPaying ? (
+              <>
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                <span>Processing...</span>
+              </>
+            ) : (
+              <>
+                <span>Pay ₹1</span>
+                <span className="text-indigo-200">→</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Developer Profile Card */}
       <div className="bg-gradient-to-r from-indigo-50 to-slate-50 dark:from-indigo-950/30 dark:to-slate-800/40 p-6 rounded-2xl border border-slate-100/80 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
